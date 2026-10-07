@@ -2,6 +2,8 @@
 
 Six decades of Uganda's coffee exports, and how world coffee prices pass through to the prices farmers are paid. Built from the Coffee Department's own statistics and its monthly reports, with IMF world prices.
 
+**Read the report: [How much of the coffee boom reached Uganda's farmers?](https://tayeruta.github.io/uganda-coffee/reports/coffee_report.html)**
+
 ## Key findings
 
 - **Exports have more than doubled since 2015/16**, to a record 8.4 million 60-kg bags in 2025/26 (preliminary), worth about US$2.2 billion a year in both 2024/25 and 2025/26.
@@ -24,11 +26,14 @@ Six decades of Uganda's coffee exports, and how world coffee prices pass through
 │   └── processed/                   # figures extracted from the reports, and result tables
 ├── notebooks/
 │   └── 01_exports_prices_and_farmgate.ipynb
+├── reports/
+│   └── coffee_report.html           # the write-up, published on GitHub Pages
 ├── scripts/
 │   ├── fetch_data.py                # downloads every input
 │   ├── extract_monthly_reports.py   # reads exports and farm-gate prices from the report PDFs
 │   ├── coffee.py                    # shared loading code
-│   └── build_notebooks.py           # generates the notebooks from source
+│   ├── build_notebooks.py           # generates the notebooks from source
+│   └── build_report_data.py         # injects the notebook's results into the report
 └── requirements.txt
 ```
 
@@ -48,6 +53,7 @@ python scripts/fetch_data.py                 # or: --food-prices-repo /path/to/u
 python scripts/extract_monthly_reports.py
 python scripts/build_notebooks.py
 jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb
+python scripts/build_report_data.py          # refresh the numbers in the report
 ```
 
 ## Data sources

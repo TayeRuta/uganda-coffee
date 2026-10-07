@@ -1,0 +1,631 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Uganda Coffee Prices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap">
+<style>
+/* Layout: single 1080px report column — masthead, KPI strip, then numbered findings, each = headline + chart panel + takeaway */
+:root{
+  --bg:#f3f5f1; --panel:#ffffff; --ink:#132019; --ink-2:#4b5a51; --muted:#7a877f; --rule:#dfe4dd; --grid:#eceee9;
+  --accent:#16825a; --wet:#2b6c9e; --wet-deep:#1b4a70; --dry:#c4572e; --dry-deep:#8d3416; --neutral:#ecebe6;
+  --mam:#16825a; --son:#8a63d2; --band:#eef3ec; --chip:#e8eee6;
+  --f-display:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Noto Sans JP",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1411; --panel:#161d19; --ink:#eaf0eb; --ink-2:#b2beb6; --muted:#859189; --rule:#27302b; --grid:#1f2723;
+  --accent:#3fae82; --wet:#4a8cc4; --wet-deep:#8cc0ec; --dry:#d9693f; --dry-deep:#f0a283; --neutral:#2a302c;
+  --mam:#2e9e74; --son:#9277e6; --band:#1a241f; --chip:#1d2622; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1411; --panel:#161d19; --ink:#eaf0eb; --ink-2:#b2beb6; --muted:#859189; --rule:#27302b; --grid:#1f2723;
+  --accent:#3fae82; --wet:#4a8cc4; --wet-deep:#8cc0ec; --dry:#d9693f; --dry-deep:#f0a283; --neutral:#2a302c;
+  --mam:#2e9e74; --son:#9277e6; --band:#1a241f; --chip:#1d2622; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:20px;padding-block:0 64px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* masthead */
+.mast{padding-block:48px 28px;display:grid;gap:18px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;gap:14px;flex-wrap:wrap}
+.eyebrow span+span{color:var(--muted)}
+.mast h1{font-size:clamp(36px,6.2vw,68px);line-height:1.02;font-weight:800;max-width:15ch}
+.mast h1 em{font-style:normal;color:var(--accent)}
+.dek{font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:62ch;line-height:1.5}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-block:28px 8px;border-top:2px solid var(--ink)}
+.kpi{padding:18px 18px 4px 0;display:grid;gap:6px;align-content:start}
+.kpi+.kpi{padding-left:18px;border-left:1px solid var(--rule)}
+.kpi .v{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,3.6vw,42px);line-height:1;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:.45em;font-weight:500;color:var(--ink-2);margin-left:3px}
+.kpi .l{font-size:14px;color:var(--ink-2);line-height:1.4}
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--chip);color:var(--ink-2);max-width:100%;white-space:normal;line-height:1.3}
+.tag i{width:7px;height:7px;border-radius:50%;background:var(--muted);display:inline-block}
+.tag.dry i{background:var(--dry)} .tag.wet i{background:var(--wet)}
+
+/* summary */
+.summary{margin-block:36px 12px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px}
+.summary h2{font-size:14px;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.summary ol{margin:0;padding:0;list-style:none;display:grid;gap:14px;counter-reset:k}
+.summary li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;font-size:17px;line-height:1.5}
+.summary li::before{counter-increment:k;content:counter(k);font-family:var(--f-mono);font-size:13px;color:var(--accent);padding-top:3px}
+.summary b{font-weight:600}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-block:28px 8px}
+nav.toc a{font-size:13px;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--rule);border-radius:99px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--ink);outline:none}
+
+/* sections */
+section.f{padding-block:56px 8px;display:grid;gap:18px;scroll-margin-top:16px}
+.f-head{display:grid;gap:10px;max-width:760px}
+.f-num{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.f-head h2{font-size:clamp(24px,3.2vw,34px);line-height:1.15;font-weight:700}
+.f-head p{color:var(--ink-2);font-size:16.5px;max-width:66ch}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:20px 20px 14px;min-width:0}
+.panel-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 24px;flex-wrap:wrap;margin-bottom:6px}
+.panel-title{font-weight:600;font-size:15px}
+.panel-sub{font-size:13px;color:var(--muted)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sw.line{height:3px;border-radius:2px;width:18px}
+.sw.dash{height:0;border-top:2px dashed var(--ink-2);width:18px;border-radius:0}
+.chart{width:100%;position:relative}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;font-size:15px;color:var(--ink-2);max-width:760px;padding:14px 16px;border-radius:10px;background:var(--band)}
+.note b{color:var(--ink);font-weight:600}
+.note .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+
+/* svg text */
+svg{display:block;overflow:visible}
+svg text{font-family:var(--f-body);fill:var(--muted);font-size:11.5px}
+svg .tick text{font-family:var(--f-mono);font-size:11px}
+svg .tick line{stroke:var(--grid)}
+svg .domain{display:none}
+svg .ann,svg .ann-strong{paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+svg .ann{fill:var(--ink-2);font-size:12px;font-weight:500}
+svg .ann-strong{fill:var(--ink);font-size:12.5px;font-weight:600}
+svg .lab{font-weight:600;font-size:12.5px}
+
+/* table */
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule)}
+th{font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td.r,th.r{text-align:right}
+tr.hi td{font-weight:600}
+.sev{display:inline-block;height:8px;border-radius:4px;background:var(--dry);vertical-align:middle}
+
+/* limits */
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.limits h3{font-size:18px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.limits ul{margin:0;padding-left:18px;display:grid;gap:8px;color:var(--ink-2);font-size:15px}
+.next{border-left:3px solid var(--accent);padding:4px 0 4px 18px;max-width:760px;font-size:17px}
+.next b{font-family:var(--f-display)}
+
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;font-size:15px;padding:10px 0}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted);display:grid;gap:8px;max-width:820px}
+
+/* tooltip */
+#tip{position:fixed;pointer-events:none;z-index:20;background:var(--ink);color:var(--bg);padding:9px 12px;border-radius:8px;font-size:13px;line-height:1.45;min-width:120px;box-shadow:0 6px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .12s}
+#tip .t{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+#tip .row{display:flex;justify-content:space-between;gap:16px}
+#tip .row b{font-family:var(--f-mono);font-weight:500}
+#tip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+
+@media (max-width:820px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:nth-child(3){padding-left:0;border-left:0}
+  .kpi:nth-child(n+3){border-top:1px solid var(--rule);margin-top:6px}
+  .summary{grid-template-columns:1fr;gap:12px}
+  .grid2,.limits{grid-template-columns:1fr}
+}
+@media (max-width:480px){ body{padding-inline:16px} .panel{padding:16px 12px 10px} }
+@media (prefers-reduced-motion:reduce){#tip{transition:none}}
+/* regional additions */
+.score{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+.score th{white-space:nowrap}
+.score td{padding:12px 8px;vertical-align:middle}
+.score th{padding-inline:8px}
+.score td.reg{font-weight:600;white-space:nowrap}
+.score td.reg small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.score tr.ref td{background:var(--band)}
+.bar-cell{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.score td .num{white-space:nowrap}
+.bar-cell i{display:block;height:10px;border-radius:0 4px 4px 0;background:var(--wet);opacity:.85}
+.bar-cell i.var{background:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pill.sig{background:var(--accent);color:var(--panel)}
+.pill.ns{background:var(--chip);color:var(--ink-2)}
+.pill.border{background:transparent;color:var(--ink-2);border:1px dashed var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mini .panel{padding:14px 14px 8px}
+.mini .ph{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.mini .ph b{font-size:14px}
+.callout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.callout .panel{display:grid;gap:6px;align-content:start}
+.callout .big{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.1}
+.callout p{font-size:14.5px;color:var(--ink-2)}
+@media (max-width:820px){.callout{grid-template-columns:1fr}}
+.mapnote{font-size:13px;color:var(--muted)}
+</style>
+<style id="formatting">
+/* Formatting: ink, white and grey with one vermilion origin line. Chart data colours are defined separately and unchanged. */
+:root{
+  --bg:#ffffff; --panel:#f6f5f2; --ink:#1a1a1a; --ink-2:#4a4a4a; --muted:#6b6b6b; --rule:#e6e4df; --grid:#ecebe7;
+  --accent:#1a1a1a; --band:#efeeea; --chip:#e6e4df; --origin:#d13b1f;
+  --f-display:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1a1a; --panel:#222221; --ink:#ffffff; --ink-2:#c9c8c4; --muted:#a3a29e; --rule:#34332f; --grid:#2b2a28;
+  --accent:#ffffff; --band:#262624; --chip:#2e2d2a; --origin:#ff7a5c}}
+:root[data-theme="dark"]{
+  --bg:#1a1a1a; --panel:#222221; --ink:#ffffff; --ink-2:#c9c8c4; --muted:#a3a29e; --rule:#34332f; --grid:#2b2a28;
+  --accent:#ffffff; --band:#262624; --chip:#2e2d2a; --origin:#ff7a5c}
+body{font-weight:400;font-feature-settings:"tnum" 1}
+.num,svg .tick text,.kpi .v,.big{font-variant-numeric:tabular-nums}
+/* Headings: Light, sentence case, ink */
+h1,h2,h3{letter-spacing:-.01em}
+.mast h1{font-weight:300;line-height:1.12;max-width:18ch}
+.mast h1 em{font-style:normal;color:var(--ink);font-weight:500}
+.f-head h2{font-weight:300}
+.limits h3,.who h3{font-weight:500}
+.panel-title,.summary b,.zone h3{font-weight:500}
+.kpi .v,.callout .big{font-weight:300}
+/* Labels: Medium, uppercase, tracked, grey */
+.eyebrow{color:var(--muted);font-weight:500;letter-spacing:.14em;font-size:11.5px}
+.eyebrow span+span{color:var(--muted)}
+.f-num,.summary h2,.note .k,th{color:var(--muted);font-weight:500;letter-spacing:.12em}
+.summary li::before{color:var(--muted);font-weight:500}
+/* The origin line: one per page, under the title, starting at the margin and running to the edge */
+.mast{position:relative;padding-top:64px;border-bottom:1px solid var(--rule)}
+/* Runs from the text margin to the right edge of the window, without widening the page */
+.mast::before{content:"";position:absolute;top:30px;left:0;right:calc((100% - 100vw) / 2);height:3px;background:var(--origin)}
+html{overflow-x:clip}
+.kpis{border-top:1px solid var(--ink)}
+/* Accents that were green become ink */
+.pill.sig{background:var(--ink);color:var(--bg)}
+.pill.border{border-color:var(--muted)}
+.conf.high{background:var(--ink);color:var(--bg)}
+.conf.med{border-color:var(--ink);color:var(--ink)}
+.next{border-left-color:var(--ink)}
+nav.toc a{background:var(--bg)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--ink)}
+a{color:var(--ink)!important;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+nav.toc a{text-decoration:none}
+summary:focus-visible,.tabs button:focus-visible{outline-color:var(--ink)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.panel{border-color:var(--rule)}
+</style>
+<div id="tip" role="status" aria-live="polite"></div>
+<style>
+:root{--rob:var(--wet);--ara:var(--dry)}
+.conf{display:inline-flex;align-items:center;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.conf.high{background:var(--ink);color:var(--bg)}
+.conf.med{border:1.5px solid var(--ink);color:var(--ink)}
+.conf.low{background:var(--chip);color:var(--ink-2)}
+.kpi .conf{justify-self:start}
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.who .panel{display:grid;gap:10px;align-content:start}
+.who h3{font-size:19px;font-weight:500}
+.who ul{margin:0;padding-left:18px;display:grid;gap:7px;font-size:15px;color:var(--ink-2)}
+.who ul b{color:var(--ink);font-weight:600}
+.conf-table td{vertical-align:top}
+.conf-table td:first-child{font-weight:600;min-width:220px}
+.conf-table td.ev{color:var(--ink-2);font-size:13.5px}
+@media (max-width:820px){.who{grid-template-columns:1fr}}
+@media (max-width:480px){.note{grid-template-columns:1fr;gap:4px}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow"><span>Agriculture brief · Coffee</span><span>Uganda, 1964–2026</span><span>Exports and farm-gate prices</span></div>
+  <h1>How much of the coffee boom <em>reached Uganda's farmers?</em></h1>
+  <p class="dek">Uganda now exports more than twice as much coffee as it did a decade ago, and in 2024–25 world prices more than tripled. Six decades of export records and 34 years of farm-gate prices show how quickly world prices reach farmers, how large a share they keep, and when coffee money arrives in the year.</p>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="v num" id="k-bags">8.4<small>m bags</small></div><div class="l" id="k-bags-l">Record exports in 2025/26 (preliminary), against 3.3 million in 2015/16</div><span class="conf high">High confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-share">78<small>%</small></div><div class="l">Farmers' share of the world robusta price since 2022, up from about 45% in 1992–93</div><span class="conf high">High confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-pt">⅔</div><div class="l">Share of a world price change reaching robusta farmers within the same month</div><span class="conf high">High confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-boom">96<small>%</small></div><div class="l" id="k-boom-l">Share of the 2020–2025 farm-gate price rise explained by the world price alone</div><span class="conf high">High confidence</span></div>
+</div>
+
+<div class="summary">
+  <h2>Key takeaways</h2>
+  <ol>
+    <li><span><b>Exports have more than doubled since 2015/16</b>, to a record 8.4 million bags in 2025/26, worth about US$2.2 billion in each of the last two years. <span class="conf high">High</span></span></li>
+    <li><span><b>Uganda's robusta sells close to the world price; its arabica at a discount</b> of 15–35%, largely because much of it is sold unwashed. <span class="conf high">High</span></span></li>
+    <li><span><b>Farmers keep a larger share than they used to:</b> about 45% of the world robusta price in 1992–93, 65–72% through 2000–2015, 72–83% since 2022. <span class="conf high">High</span></span></li>
+    <li><span><b>World prices reach farmers fast.</b> Two-thirds or more of a change arrives within the month for robusta; arabica follows more slowly. <span class="conf high">High</span></span></li>
+    <li><span><b>The 2024–25 boom was the world price, and it is unwinding.</b> Farm-gate prices peaked in February 2025 and are down about a quarter since. <span class="conf high">High</span></span></li>
+    <li><span><b>Coffee money arrives June–September for robusta and February–May for arabica.</b> Prices are calmer than maize month to month, but can halve within a year when the world cycle turns. <span class="conf high">High</span></span></li>
+  </ol>
+</div>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#exports">Exports</a><a href="#world">World prices</a><a href="#share">Farmers' share</a><a href="#speed">Pass-through</a><a href="#boom">The boom</a><a href="#calendar">Calendar</a><a href="#risk">Price risk</a><a href="#meaning">What it means</a><a href="#methods">Methods</a>
+</nav>
+
+<section class="f" id="exports">
+  <div class="f-head">
+    <div class="f-num">01 · Exports</div>
+    <h2>Four decades flat, then a doubling</h2>
+    <p>Export volume by financial year (July–June). From 1964 to about 2015 Uganda exported 2–4 million 60-kg bags a year. Since 2016/17 volumes have climbed steadily, almost entirely robusta. The robusta/arabica split is available from 1991/92.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Coffee exports, million 60-kg bags</div><div class="panel-sub">Hover a bar for the year · 2023/24 onwards summed from monthly reports (preliminary)</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--rob)"></i>Robusta</span><span><i class="sw" style="background:var(--ara)"></i>Arabica</span><span><i class="sw" style="background:var(--rule)"></i>Total (no split before 1991/92)</span></div>
+    </div>
+    <div class="chart" id="c-exports"></div>
+  </div>
+  <div class="callout" id="export-cards"></div>
+</section>
+
+<section class="f" id="world">
+  <div class="f-head">
+    <div class="f-num">02 · World prices</div>
+    <h2>Robusta sells at the world price; arabica at a discount</h2>
+    <p>Average price per kg of Uganda's monthly coffee exports, against the world benchmark for each type (IMF prices, dashed). Uganda's robusta tracks the world robusta price closely. Its arabica sells well below the "other milds" benchmark, which is set by washed arabica from Colombia and Central America.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Export price, US$ per kg</div><div class="panel-sub">Hover for the month</div></div>
+      <div class="legend"><span><i class="sw line" style="background:var(--rob)"></i>Robusta exports</span><span><i class="sw dash" style="border-top-color:var(--rob)"></i>World robusta</span><span><i class="sw line" style="background:var(--ara)"></i>Arabica exports</span><span><i class="sw dash" style="border-top-color:var(--ara)"></i>World arabica</span></div>
+    </div>
+    <div class="chart" id="c-world"></div>
+  </div>
+  <div class="note"><span class="k">Why the arabica gap</span><span>Much of Uganda's arabica is sold as unwashed <i>drugar</i>, which trades below washed coffee. Part of the 15–35% discount is therefore a processing gap: more washing stations, especially around Mt Elgon and the Rwenzoris, could narrow it.</span></div>
+</section>
+
+<section class="f" id="share">
+  <div class="f-head">
+    <div class="f-num">03 · Farmers' share</div>
+    <h2>Farmers now keep about three-quarters of the world price</h2>
+    <p>The farm-gate price of robusta FAQ (hulled green bean) as a share of the world robusta price, both in US dollars. The grey band marks late 2015–2019, when farm-gate prices were not published.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Farm-gate FAQ price as % of world robusta price</div><div class="panel-sub">Monthly (thin) and yearly average (dots)</div></div>
+    </div>
+    <div class="chart" id="c-share"></div>
+  </div>
+  <div class="note"><span class="k">Reading</span><span>The share rose fast after Uganda liberalised coffee marketing in the early 1990s, and dips when world prices crash (52% in 2001), because traders' and exporters' costs don't fall with the price. Kiboko (dried cherry) sells for about half the FAQ price throughout, matching the weight lost in hulling, so farmers selling kiboko are paid about the same per kg of coffee.</span></div>
+</section>
+
+<section class="f" id="speed">
+  <div class="f-head">
+    <div class="f-num">04 · Pass-through</div>
+    <h2>Robusta prices follow the world within weeks</h2>
+    <p>The share of a world price change (in shillings) that shows up in farm-gate prices within the same month, with 95% confidence intervals, and how many months it takes to close half of any remaining gap.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Same-month pass-through of world price changes</div><div class="panel-sub">Error-correction model, monthly data · labels show the half-life of the remaining gap</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--muted);border-radius:50%"></i>1992–2015</span><span><i class="sw" style="background:var(--ink);border-radius:50%"></i>2020–2026</span></div>
+    </div>
+    <div class="chart" id="c-pt"></div>
+  </div>
+  <div class="note"><span class="k">Rises and falls</span><span>In 2020–2026, world price rises reached robusta farmers almost in full within the month, while falls were passed on by about half (p = 0.06 for FAQ, 0.30 for kiboko; no difference in 1992–2015). That's the opposite of the common worry that traders pass falls on faster, and fits strong competition among 80-plus exporters during the boom. With one boom in the data, treat it as suggestive.</span></div>
+</section>
+
+<section class="f" id="boom">
+  <div class="f-head">
+    <div class="f-num">05 · The boom</div>
+    <h2>The farm-gate boom was the world price, and it is unwinding</h2>
+    <p>World robusta price converted to shillings, against farm-gate FAQ and kiboko prices. Drought in Vietnam and Brazil drove world prices up from 2023; Ugandan farm-gate prices followed within weeks and peaked in the same month.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Robusta prices, UGX per kg</div><div class="panel-sub">Hover for the month</div></div>
+      <div class="legend"><span><i class="sw dash" style="border-top-color:var(--rob)"></i>World robusta, in UGX</span><span><i class="sw line" style="background:var(--ink)"></i>Farm-gate FAQ</span><span><i class="sw line" style="background:var(--muted)"></i>Farm-gate kiboko</span></div>
+    </div>
+    <div class="chart" id="c-boom"></div>
+  </div>
+  <div class="callout" id="boom-cards"></div>
+</section>
+
+<section class="f" id="calendar">
+  <div class="f-head">
+    <div class="f-num">06 · Calendar</div>
+    <h2>When coffee money arrives</h2>
+    <p>Average share of each year's exports leaving in each month, FY2020/21–2025/26. Exports follow the harvest by a few weeks, so this is close to when farmers sell.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Share of the year's exports, by month</div><div class="panel-sub">Dashed line: an even year (8.3% a month)</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--rob)"></i>Robusta</span><span><i class="sw" style="background:var(--ara)"></i>Arabica</span></div>
+    </div>
+    <div class="chart" id="c-cal"></div>
+  </div>
+  <div class="note"><span class="k">Reading</span><span>Robusta peaks in June–September, after the main harvest in Greater Masaka and the southwest, with a smaller wave around the central region's harvest at the turn of the year. Arabica peaks in February–May, after the Mt Elgon harvest is processed.</span></div>
+</section>
+
+<section class="f" id="risk">
+  <div class="f-head">
+    <div class="f-num">07 · Price risk</div>
+    <h2>Calm month to month, but deep cycles</h2>
+    <p>Typical real price movements (after inflation) for coffee at the farm gate and retail maize in Kampala, 2020–2026, and the worst 12-month real fall in each record.</p>
+  </div>
+  <div class="panel">
+    <div class="scroll"><table class="score" id="t-risk" style="min-width:620px"><thead><tr>
+      <th>Price</th><th class="r">Typical monthly move</th><th class="r">Typical 12-month move</th><th class="r">Worst 12-month fall</th>
+    </tr></thead><tbody></tbody></table></div>
+  </div>
+  <div class="note"><span class="k">Reading</span><span>Coffee prices move about half as much as maize from one month to the next, so a season's income is fairly predictable once it starts. But coffee's worst falls are deeper than maize's: robusta lost more than half its real value in the 2001 world price crash. Income tied to coffee can halve within a year when the world cycle turns.</span></div>
+</section>
+
+<section class="f" id="meaning">
+  <div class="f-head">
+    <div class="f-num">08 · What it means</div>
+    <h2>Implications</h2>
+    <p>These follow from the price and export evidence; the climate and deforestation analyses that come next will add to them.</p>
+  </div>
+  <div class="who">
+    <div class="panel">
+      <span class="tag wet"><i></i>Farmers</span>
+      <h3>Watch the world price</h3>
+      <ul>
+        <li><b>Farm-gate prices are the world price with a short delay.</b> When world prices move, Ugandan prices follow within weeks.</li>
+        <li>Kiboko and FAQ sellers are paid about the same per kg of coffee; hulling doesn't capture extra margin.</li>
+        <li>Washing arabica rather than selling it as drugar is where quality premiums lie.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <span class="tag wet"><i></i>Lenders and SACCOs</span>
+      <h3>Time repayments to the harvest</h3>
+      <ul>
+        <li><b>Schedule coffee-linked repayments for June–September (robusta areas) and February–May (arabica areas).</b></li>
+        <li>Stress-test loans against a 50% fall in coffee prices over a year: robusta fell that far in 2001 and arabica in 2012.</li>
+        <li>The 2024–25 boom is already partly reversed; collateral and income valued at peak prices are overstated.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <span class="tag dry"><i></i>Policy</span>
+      <h3>Quality, not price controls</h3>
+      <ul>
+        <li><b>The market already passes prices through fast and gives farmers a rising share.</b></li>
+        <li>The biggest gap is arabica processing: its discount to the world benchmark is 15–35%.</li>
+        <li>Publishing farm-gate prices consistently would close the 2015–2019 hole in the public record.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="scroll"><table class="score conf-table" style="min-width:760px"><thead><tr><th>Finding</th><th>Evidence</th><th>Confidence</th></tr></thead><tbody>
+      <tr><td>Exports more than doubled since 2015/16</td><td class="ev">Official annual tables to 2022/23; monthly reports after (within about 2% of final figures)</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Farmers' share of the world robusta price rose to 72–83%</td><td class="ev">34 years of monthly farm-gate prices against IMF world prices; consistent across grades</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Robusta prices pass through within weeks</td><td class="ev">Same-month pass-through 0.65–0.79 in both periods; gap half-life 2–3 months</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Arabica passes through more slowly</td><td class="ev">Same-month 0.37–0.41; half-life 3 months (1992–2015) to 9 months (2020–2026)</td><td><span class="conf med">Medium</span></td></tr>
+      <tr><td>Recent rises passed on faster than falls</td><td class="ev">Robusta FAQ, 2020–2026, p = 0.06; one boom in the data; not seen in 1992–2015</td><td><span class="conf low">Suggestive</span></td></tr>
+      <tr><td>The 2024–25 boom came from the world price</td><td class="ev">About 96% of the 2020–2025 rise; exchange rate and farmers' share contributed little</td><td><span class="conf high">High</span></td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="f" id="methods">
+  <div class="f-head">
+    <div class="f-num">09 · Methods and limits</div>
+    <h2>How this was done</h2>
+  </div>
+  <div class="limits">
+    <div class="panel">
+      <h3><span class="tag wet"><i></i>Method</span></h3>
+      <ul>
+        <li id="m-reports">Exports and farm-gate prices read automatically from 80 monthly reports, each summary checked against the report's own tables</li>
+        <li>Farm-gate prices 1992–2015 from the Coffee Department's price table</li>
+        <li>Pass-through from an error-correction model of monthly price changes, with robust standard errors and separate terms for rises and falls</li>
+        <li>Exchange rate from the Coffee Department table to 2015, then the rate implied by WFP's price conversions</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3><span class="tag dry"><i></i>Limits</span></h3>
+      <ul>
+        <li>Farm-gate prices for late 2015–2019 are not published</li>
+        <li>Monthly export figures are preliminary (within about 2% of final figures)</li>
+        <li>Farm-gate prices are national averages; regional and buyer differences are not visible</li>
+        <li>Export values are nominal US dollars, which overstates long-run growth</li>
+      </ul>
+    </div>
+  </div>
+  <p class="next"><b>Next.</b> Climate exposure: rainfall and temperature in the arabica and robusta zones against the following year's exports. Then deforestation screening of coffee areas for the EU's deforestation regulation.</p>
+</section>
+
+<footer>
+  <p><b>Sources.</b> Exports and farm-gate prices: Coffee Department, Ministry of Agriculture, Animal Industry and Fisheries (formerly the Uganda Coffee Development Authority). World prices: IMF, via FRED. Exchange rates and consumer prices: Coffee Department, WFP and FAOSTAT.</p>
+  <p><b>Related.</b> <a href="https://tayeruta.github.io/uganda-food-prices/reports/food_prices_report.html">Rainfall shocks and food prices</a> · <a href="https://tayeruta.github.io/uganda-rainfall-analysis/reports/synthesis_report.html">Uganda rainfall synthesis</a></p>
+  <p><b>Reproducibility.</b> Every number on this page comes from <span class="num">notebooks/01_exports_prices_and_farmgate.ipynb</span> and <span class="num">scripts/build_report_data.py</span>.</p>
+</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script id="report-data" type="application/json">{"annual":[{"fy":"1964/65","total":2158736.0,"rob":null,"ara":null,"usd_m":76.8203},{"fy":"1965/66","total":2855621.0,"rob":null,"ara":null,"usd_m":106.127},{"fy":"1966/67","total":2637862.0,"rob":null,"ara":null,"usd_m":146.5488},{"fy":"1967/68","total":2967825.0,"rob":null,"ara":null,"usd_m":139.078},{"fy":"1968/69","total":2670201.0,"rob":null,"ara":null,"usd_m":162.4736},{"fy":"1969/70","total":3193638.0,"rob":null,"ara":null,"usd_m":185.8744},{"fy":"1970/71","total":3032609.0,"rob":null,"ara":null,"usd_m":130.818},{"fy":"1971/72","total":3139559.0,"rob":null,"ara":null,"usd_m":145.4697},{"fy":"1972/73","total":3677100.0,"rob":null,"ara":null,"usd_m":175.5492},{"fy":"1973/74","total":3283183.0,"rob":null,"ara":null,"usd_m":228.519},{"fy":"1974/75","total":2861399.0,"rob":null,"ara":null,"usd_m":175.3371},{"fy":"1975/76","total":2431524.0,"rob":null,"ara":null,"usd_m":245.2228},{"fy":"1976/77","total":2449737.0,"rob":null,"ara":null,"usd_m":558.5126},{"fy":"1977/78","total":1742575.0,"rob":null,"ara":null,"usd_m":312.0974},{"fy":"1978/79","total":2353031.0,"rob":null,"ara":null,"usd_m":389.1084},{"fy":"1979/80","total":2219802.0,"rob":null,"ara":null,"usd_m":433.4717},{"fy":"1980/81","total":1973458.0,"rob":null,"ara":null,"usd_m":230.4636},{"fy":"1981/82","total":2785647.0,"rob":null,"ara":null,"usd_m":322.0303},{"fy":"1982/83","total":2194888.0,"rob":null,"ara":null,"usd_m":295.2593},{"fy":"1983/84","total":2519024.0,"rob":null,"ara":null,"usd_m":392.6771},{"fy":"1984/85","total":2500031.0,"rob":null,"ara":null,"usd_m":367.5911},{"fy":"1985/86","total":2392198.0,"rob":null,"ara":null,"usd_m":390.3626},{"fy":"1986/87","total":2280206.0,"rob":null,"ara":null,"usd_m":308.5947},{"fy":"1987/88","total":2318341.0,"rob":null,"ara":null,"usd_m":263.2396},{"fy":"1988/89","total":3114396.0,"rob":null,"ara":null,"usd_m":294.8679},{"fy":"1989/90","total":2364751.0,"rob":null,"ara":null,"usd_m":139.5667},{"fy":"1990/91","total":2085004.0,"rob":null,"ara":null,"usd_m":121.3431},{"fy":"1991/92","total":2030829.0,"rob":1884183.0,"ara":169034.0,"usd_m":101.4428},{"fy":"1992/93","total":2088642.0,"rob":1841510.0,"ara":247132.0,"usd_m":108.874},{"fy":"1993/94","total":3005205.0,"rob":2471960.0,"ara":533245.0,"usd_m":273.6588},{"fy":"1994/95","total":2792753.0,"rob":2284109.0,"ara":507644.0,"usd_m":432.651},{"fy":"1995/96","total":4148803.0,"rob":3762347.0,"ara":386456.0,"usd_m":388.9162},{"fy":"1996/97","total":4237114.0,"rob":3789013.0,"ara":448101.0,"usd_m":355.1266},{"fy":"1997/98","total":3032338.0,"rob":2691878.0,"ara":340460.0,"usd_m":276.4761},{"fy":"1998/99","total":3647989.0,"rob":3291540.0,"ara":356449.0,"usd_m":282.9955},{"fy":"1999/00","total":2917257.0,"rob":2390682.0,"ara":526575.0,"usd_m":164.7638},{"fy":"2000/01","total":3074773.0,"rob":2614862.0,"ara":459911.0,"usd_m":104.7764},{"fy":"2001/02","total":3146381.0,"rob":2716005.0,"ara":430376.0,"usd_m":83.937},{"fy":"2002/03","total":2663888.0,"rob":2239766.0,"ara":443386.0,"usd_m":104.7871},{"fy":"2003/04","total":2523042.0,"rob":1979353.0,"ara":543689.0,"usd_m":115.7058},{"fy":"2004/05","total":2504890.0,"rob":1988360.0,"ara":516530.0,"usd_m":162.0786},{"fy":"2005/06","total":2002324.0,"rob":1408314.0,"ara":594010.0,"usd_m":170.3436},{"fy":"2006/07","total":2704236.0,"rob":2144482.0,"ara":559754.0,"usd_m":256.5808},{"fy":"2007/08","total":3210603.0,"rob":2713498.0,"ara":497105.0,"usd_m":388.3982},{"fy":"2008/09","total":3053688.0,"rob":2405137.0,"ara":648551.0,"usd_m":291.7439},{"fy":"2009/10","total":2668971.0,"rob":1957400.0,"ara":711571.0,"usd_m":266.6731},{"fy":"2010/11","total":3149423.0,"rob":2484013.0,"ara":665410.0,"usd_m":448.8907},{"fy":"2011/12","total":2726249.0,"rob":1904176.0,"ara":822073.0,"usd_m":392.6981},{"fy":"2012/13","total":3582629.0,"rob":2781478.0,"ara":801151.0,"usd_m":432.6941},{"fy":"2013/14","total":3499829.0,"rob":2735020.0,"ara":764809.0,"usd_m":393.9223},{"fy":"2014/15","total":3455852.0,"rob":2722636.0,"ara":733216.0,"usd_m":410.5641},{"fy":"2015/16","total":3315567.0,"rob":2435160.0,"ara":880407.0,"usd_m":326.6763},{"fy":"2016/17","total":4605158.0,"rob":3618631.0,"ara":986527.0,"usd_m":544.5876},{"fy":"2017/18","total":4305597.0,"rob":3190306.0,"ara":1113815.0,"usd_m":462.8289},{"fy":"2018/19","total":4439968.0,"rob":3472050.0,"ara":967918.0,"usd_m":433.9643},{"fy":"2019/20","total":5359970.0,"rob":4394629.0,"ara":965341.0,"usd_m":512.3334},{"fy":"2020/21","total":6498941.0,"rob":5807447.0,"ara":691494.0,"usd_m":627.1848},{"fy":"2021/22","total":5858957.0,"rob":4871280.0,"ara":987677.0,"usd_m":877.3824},{"fy":"2022/23","total":5761549.0,"rob":4758052.0,"ara":1003497.0,"usd_m":846.0183},{"fy":"2023/24","total":6120761.0,"rob":5304067.0,"ara":816694.0,"usd_m":1143.92},{"fy":"2024/25","total":7753058.0,"rob":6899707.0,"ara":853353.0,"usd_m":2210.53},{"fy":"2025/26","total":8372382.0,"rob":7135801.0,"ara":1236029.0,"usd_m":2191.46}],"exports_vs_world":[{"d":"2020-01","rob":1.5249,"rob_w":1.5561,"ara":2.4577,"ara_w":3.1512},{"d":"2020-02","rob":1.4851,"rob_w":1.5006,"ara":2.3909,"ara_w":2.9873},{"d":"2020-03","rob":1.4288,"rob_w":1.4872,"ara":2.3258,"ara_w":3.2701},{"d":"2020-04","rob":1.4308,"rob_w":1.4115,"ara":2.4632,"ara_w":3.409},{"d":"2020-05","rob":1.4445,"rob_w":1.4228,"ara":2.2287,"ara_w":3.3051},{"d":"2020-06","rob":1.4095,"rob_w":1.4246,"ara":2.3836,"ara_w":3.12},{"d":"2020-07","rob":1.4267,"rob_w":1.4922,"ara":2.186,"ara_w":3.236},{"d":"2020-08","rob":1.389,"rob_w":1.6014,"ara":2.131,"ara_w":3.5951},{"d":"2020-09","rob":null,"rob_w":1.6044,"ara":null,"ara_w":3.6721},{"d":"2020-10","rob":null,"rob_w":1.507,"ara":null,"ara_w":3.3523},{"d":"2020-11","rob":1.368,"rob_w":1.5958,"ara":2.2198,"ara_w":3.3229},{"d":"2020-12","rob":1.3712,"rob_w":1.5861,"ara":2.4172,"ara_w":3.4823},{"d":"2021-01","rob":1.3692,"rob_w":1.5612,"ara":2.4174,"ara_w":3.5455},{"d":"2021-02","rob":1.3635,"rob_w":1.6176,"ara":2.5747,"ara_w":3.6691},{"d":"2021-03","rob":1.3837,"rob_w":1.6283,"ara":2.6479,"ara_w":3.6828},{"d":"2021-04","rob":1.4021,"rob_w":1.6417,"ara":2.4979,"ara_w":3.7181},{"d":"2021-05","rob":1.4564,"rob_w":1.7567,"ara":2.4816,"ara_w":4.1108},{"d":"2021-06","rob":1.4811,"rob_w":1.8723,"ara":2.6162,"ara_w":4.2343},{"d":"2021-07","rob":1.587,"rob_w":2.0743,"ara":2.9647,"ara_w":4.5085},{"d":"2021-08","rob":1.7084,"rob_w":2.0919,"ara":2.544,"ara_w":4.7716},{"d":"2021-09","rob":1.8385,"rob_w":2.3058,"ara":2.6361,"ara_w":4.9722},{"d":"2021-10","rob":1.9348,"rob_w":2.3216,"ara":3.301,"ara_w":5.3148},{"d":"2021-11","rob":1.9637,"rob_w":2.4126,"ara":3.705,"ara_w":5.7095},{"d":"2021-12","rob":2.035,"rob_w":2.4794,"ara":3.9521,"ara_w":5.9156},{"d":"2022-01","rob":2.1183,"rob_w":2.4187,"ara":4.1999,"ara_w":5.9763},{"d":"2022-02","rob":2.1736,"rob_w":2.4124,"ara":4.5131,"ara_w":6.1693},{"d":"2022-03","rob":2.2643,"rob_w":2.2911,"ara":4.5346,"ara_w":5.7098},{"d":"2022-04","rob":2.2387,"rob_w":2.2919,"ara":4.2919,"ara_w":5.851},{"d":"2022-05","rob":2.2509,"rob_w":2.2742,"ara":4.0866,"ara_w":5.7419},{"d":"2022-06","rob":2.288,"rob_w":2.2894,"ara":4.4139,"ara_w":6.0354},{"d":"2022-07","rob":2.2569,"rob_w":2.2144,"ara":4.1431,"ara_w":5.6418},{"d":"2022-08","rob":2.2012,"rob_w":2.4182,"ara":4.0529,"ara_w":5.919},{"d":"2022-09","rob":2.2333,"rob_w":2.455,"ara":3.8027,"ara_w":5.8972},{"d":"2022-10","rob":2.2266,"rob_w":2.271,"ara":3.9356,"ara_w":5.2929},{"d":"2022-11","rob":2.0729,"rob_w":2.0414,"ara":3.7997,"ara_w":4.7117},{"d":"2022-12","rob":2.0389,"rob_w":2.0378,"ara":3.6232,"ara_w":4.6383},{"d":"2023-01","rob":2.0039,"rob_w":2.116,"ara":3.6163,"ara_w":4.5583},{"d":"2023-02","rob":1.9966,"rob_w":2.292,"ara":3.3734,"ara_w":5.0597},{"d":"2023-03","rob":2.1015,"rob_w":2.3476,"ara":3.4702,"ara_w":4.9089},{"d":"2023-04","rob":2.2,"rob_w":2.5482,"ara":3.518,"ara_w":5.0696},{"d":"2023-05","rob":2.3175,"rob_w":2.7018,"ara":3.6835,"ara_w":4.8528},{"d":"2023-06","rob":2.515,"rob_w":2.9129,"ara":3.7449,"ara_w":4.5721},{"d":"2023-07","rob":2.6295,"rob_w":2.8127,"ara":3.5051,"ara_w":4.2658},{"d":"2023-08","rob":2.6939,"rob_w":2.7416,"ara":3.1394,"ara_w":4.1082},{"d":"2023-09","rob":2.702,"rob_w":2.7313,"ara":3.1097,"ara_w":4.0474},{"d":"2023-10","rob":2.7175,"rob_w":2.6199,"ara":3.363,"ara_w":4.0554},{"d":"2023-11","rob":2.6168,"rob_w":2.7067,"ara":3.3583,"ara_w":4.3527},{"d":"2023-12","rob":2.6131,"rob_w":2.9849,"ara":3.395,"ara_w":4.6365},{"d":"2024-01","rob":2.8157,"rob_w":3.2656,"ara":3.7142,"ara_w":4.4948},{"d":"2024-02","rob":3.0692,"rob_w":3.3781,"ara":3.7475,"ara_w":4.6029},{"d":"2024-03","rob":3.1303,"rob_w":3.6561,"ara":3.6831,"ara_w":4.6057},{"d":"2024-04","rob":3.5335,"rob_w":4.2698,"ara":3.8488,"ara_w":5.2881},{"d":"2024-05","rob":3.7971,"rob_w":4.1107,"ara":4.0458,"ara_w":5.1223},{"d":"2024-06","rob":4.0671,"rob_w":4.5046,"ara":3.939,"ara_w":5.4764},{"d":"2024-07","rob":4.2722,"rob_w":4.7298,"ara":4.232,"ara_w":5.668},{"d":"2024-08","rob":4.4154,"rob_w":4.7332,"ara":4.3032,"ara_w":5.7637},{"d":"2024-09","rob":4.5315,"rob_w":5.3454,"ara":4.5291,"ara_w":6.1456},{"d":"2024-10","rob":4.6398,"rob_w":4.892,"ara":4.9572,"ara_w":6.1019},{"d":"2024-11","rob":4.4541,"rob_w":4.9853,"ara":4.9953,"ara_w":6.7231},{"d":"2024-12","rob":4.5515,"rob_w":5.2387,"ara":5.336,"ara_w":7.5865},{"d":"2025-01","rob":4.6526,"rob_w":5.4,"ara":5.3956,"ara_w":7.8029},{"d":"2025-02","rob":4.8326,"rob_w":5.7991,"ara":6.0555,"ara_w":9.0283},{"d":"2025-03","rob":4.9354,"rob_w":5.681,"ara":6.0985,"ara_w":8.9113},{"d":"2025-04","rob":4.967,"rob_w":5.4355,"ara":6.2086,"ara_w":8.6622},{"d":"2025-05","rob":4.9071,"rob_w":5.2316,"ara":6.5921,"ara_w":8.7653},{"d":"2025-06","rob":4.5673,"rob_w":4.3258,"ara":6.3906,"ara_w":8.0064},{"d":"2025-07","rob":4.0195,"rob_w":3.6854,"ara":6.1019,"ara_w":6.9826},{"d":"2025-08","rob":3.7791,"rob_w":4.3841,"ara":6.3133,"ara_w":8.062},{"d":"2025-09","rob":4.1056,"rob_w":4.6483,"ara":6.4851,"ara_w":8.8086},{"d":"2025-10","rob":4.2232,"rob_w":4.7413,"ara":6.462,"ara_w":8.9021},{"d":"2025-11","rob":4.2855,"rob_w":4.7361,"ara":7.0167,"ara_w":9.0319},{"d":"2025-12","rob":4.2906,"rob_w":4.194,"ara":6.8208,"ara_w":8.3868},{"d":"2026-01","rob":4.1347,"rob_w":4.2392,"ara":6.8333,"ara_w":8.0228},{"d":"2026-02","rob":4.0561,"rob_w":3.9594,"ara":6.7194,"ara_w":7.0846},{"d":"2026-03","rob":3.936,"rob_w":3.897,"ara":6.3231,"ara_w":7.3659},{"d":"2026-04","rob":3.8742,"rob_w":3.6298,"ara":6.212,"ara_w":7.3022},{"d":"2026-05","rob":3.7368,"rob_w":3.671,"ara":5.9532,"ara_w":6.9459},{"d":"2026-06","rob":3.674,"rob_w":3.7344,"ara":6.158,"ara_w":6.7864},{"d":"2026-07","rob":3.8251,"rob_w":4.0836,"ara":6.1071,"ara_w":7.9182},{"d":"2026-08","rob":3.943,"rob_w":null,"ara":6.06,"ara_w":null}],"ratio_by_year":{"2020":{"rob":0.9494,"ara":0.7083},"2021":{"rob":0.8243,"ara":0.6379},"2022":{"rob":0.9639,"ara":0.7333},"2023":{"rob":0.9237,"ara":0.7605},"2024":{"rob":0.8896,"ara":0.7638},"2025":{"rob":0.9272,"ara":0.7519},"2026":{"rob":1.0022,"ara":0.8636}},"share_monthly":[{"d":"1992-07","v":0.4137},{"d":"1992-08","v":0.4317},{"d":"1992-09","v":0.3743},{"d":"1992-10","v":0.4228},{"d":"1992-11","v":0.4236},{"d":"1992-12","v":0.4495},{"d":"1993-01","v":0.4692},{"d":"1993-02","v":0.4301},{"d":"1993-03","v":0.4503},{"d":"1993-04","v":0.4507},{"d":"1993-05","v":0.448},{"d":"1993-06","v":0.4375},{"d":"1993-07","v":0.4642},{"d":"1993-08","v":0.4199},{"d":"1993-09","v":0.4272},{"d":"1993-10","v":0.5251},{"d":"1993-11","v":0.4107},{"d":"1993-12","v":0.5707},{"d":"1994-01","v":0.6123},{"d":"1994-02","v":0.7855},{"d":"1994-03","v":0.7779},{"d":"1994-04","v":0.7563},{"d":"1994-05","v":0.6165},{"d":"1994-06","v":0.5779},{"d":"1994-07","v":0.5902},{"d":"1994-08","v":0.6777},{"d":"1994-09","v":0.5872},{"d":"1994-10","v":0.4657},{"d":"1994-11","v":0.5964},{"d":"1994-12","v":0.612},{"d":"1995-01","v":0.6463},{"d":"1995-02","v":0.6595},{"d":"1995-03","v":0.5869},{"d":"1995-04","v":0.5734},{"d":"1995-05","v":0.5905},{"d":"1995-06","v":0.6481},{"d":"1995-07","v":0.7664},{"d":"1995-08","v":0.6658},{"d":"1995-09","v":0.633},{"d":"1995-10","v":0.6487},{"d":"1995-11","v":0.6894},{"d":"1995-12","v":0.6558},{"d":"1996-01","v":0.6787},{"d":"1996-02","v":0.6371},{"d":"1996-03","v":0.7132},{"d":"1996-04","v":0.7172},{"d":"1996-05","v":0.6588},{"d":"1996-06","v":0.6703},{"d":"1996-07","v":0.6591},{"d":"1996-08","v":0.5377},{"d":"1996-09","v":0.6196},{"d":"1996-10","v":0.5062},{"d":"1996-11","v":0.5084},{"d":"1996-12","v":0.5554},{"d":"1997-01","v":0.7545},{"d":"1997-02","v":0.8152},{"d":"1997-03","v":0.7338},{"d":"1997-04","v":0.7831},{"d":"1997-05","v":0.8098},{"d":"1997-06","v":0.6831},{"d":"1997-07","v":0.7913},{"d":"1997-08","v":0.6921},{"d":"1997-09","v":0.6632},{"d":"1997-10","v":0.6647},{"d":"1997-11","v":0.6781},{"d":"1997-12","v":0.6519},{"d":"1998-01","v":0.7607},{"d":"1998-02","v":0.7775},{"d":"1998-03","v":0.8412},{"d":"1998-04","v":0.7678},{"d":"1998-05","v":0.6853},{"d":"1998-06","v":0.6611},{"d":"1998-07","v":0.6685},{"d":"1998-08","v":0.7146},{"d":"1998-09","v":0.7514},{"d":"1998-10","v":0.5365},{"d":"1998-11","v":0.5436},{"d":"1998-12","v":0.5131},{"d":"1999-01","v":0.5687},{"d":"1999-02","v":0.5898},{"d":"1999-03","v":0.6468},{"d":"1999-04","v":0.7176},{"d":"1999-05","v":0.6364},{"d":"1999-06","v":0.6289},{"d":"1999-07","v":0.6312},{"d":"1999-08","v":0.6863},{"d":"1999-09","v":0.6734},{"d":"1999-10","v":0.6946},{"d":"1999-11","v":0.6753},{"d":"1999-12","v":0.6364},{"d":"2000-01","v":0.7423},{"d":"2000-02","v":0.8532},{"d":"2000-03","v":0.8098},{"d":"2000-04","v":0.6338},{"d":"2000-05","v":0.7221},{"d":"2000-06","v":0.6428},{"d":"2000-07","v":0.6543},{"d":"2000-08","v":0.6713},{"d":"2000-09","v":0.6272},{"d":"2000-10","v":0.6671},{"d":"2000-11","v":0.587},{"d":"2000-12","v":0.602},{"d":"2001-01","v":0.5721},{"d":"2001-03","v":0.6455},{"d":"2001-07","v":0.5254},{"d":"2001-08","v":0.4992},{"d":"2001-09","v":0.4758},{"d":"2001-10","v":0.5055},{"d":"2001-11","v":0.4414},{"d":"2001-12","v":0.4628},{"d":"2002-01","v":0.4744},{"d":"2002-02","v":0.481},{"d":"2002-03","v":0.6026},{"d":"2002-04","v":0.6121},{"d":"2002-05","v":0.6322},{"d":"2002-06","v":0.6128},{"d":"2002-07","v":0.5234},{"d":"2002-08","v":0.5766},{"d":"2002-09","v":0.4784},{"d":"2002-10","v":0.5037},{"d":"2002-11","v":0.6694},{"d":"2002-12","v":0.7756},{"d":"2003-01","v":0.7395},{"d":"2003-02","v":0.6128},{"d":"2003-03","v":0.7405},{"d":"2003-04","v":0.7358},{"d":"2003-05","v":0.7218},{"d":"2003-06","v":0.6666},{"d":"2004-01","v":0.7996},{"d":"2004-02","v":0.7215},{"d":"2004-03","v":0.7699},{"d":"2005-01","v":0.7263},{"d":"2005-02","v":0.7393},{"d":"2005-03","v":0.7647},{"d":"2006-01","v":0.8162},{"d":"2006-02","v":0.7536},{"d":"2006-03","v":0.7422},{"d":"2006-06","v":0.7693},{"d":"2006-07","v":0.6625},{"d":"2006-08","v":0.6672},{"d":"2006-09","v":0.5869},{"d":"2006-10","v":0.6874},{"d":"2006-11","v":0.6008},{"d":"2006-12","v":0.6556},{"d":"2007-01","v":0.639},{"d":"2007-02","v":0.6877},{"d":"2007-03","v":0.6899},{"d":"2007-04","v":0.6269},{"d":"2007-05","v":0.6059},{"d":"2007-06","v":0.5955},{"d":"2007-07","v":0.7119},{"d":"2007-08","v":0.627},{"d":"2007-09","v":0.5824},{"d":"2007-10","v":0.6278},{"d":"2007-11","v":0.631},{"d":"2007-12","v":0.7059},{"d":"2008-01","v":0.6565},{"d":"2008-02","v":0.6904},{"d":"2008-03","v":0.6526},{"d":"2008-04","v":0.6766},{"d":"2008-05","v":0.6665},{"d":"2008-06","v":0.719},{"d":"2008-07","v":0.677},{"d":"2008-08","v":0.7066},{"d":"2008-09","v":0.7261},{"d":"2008-10","v":0.6392},{"d":"2008-11","v":0.6018},{"d":"2008-12","v":0.6795},{"d":"2009-01","v":0.6956},{"d":"2009-02","v":0.6905},{"d":"2009-03","v":0.6928},{"d":"2009-04","v":0.6334},{"d":"2009-05","v":0.6142},{"d":"2009-06","v":0.561},{"d":"2009-07","v":0.5846},{"d":"2009-08","v":0.6658},{"d":"2009-09","v":0.689},{"d":"2009-10","v":0.7233},{"d":"2009-11","v":0.6968},{"d":"2009-12","v":0.6356},{"d":"2010-01","v":0.7371},{"d":"2010-02","v":0.7363},{"d":"2010-03","v":0.6789},{"d":"2010-04","v":0.6384},{"d":"2010-05","v":0.7317},{"d":"2010-06","v":0.7314},{"d":"2010-07","v":0.6834},{"d":"2010-08","v":0.7376},{"d":"2010-09","v":0.6941},{"d":"2010-10","v":0.6823},{"d":"2010-11","v":0.6463},{"d":"2010-12","v":0.8032},{"d":"2011-01","v":0.7404},{"d":"2011-02","v":0.6556},{"d":"2011-03","v":0.5455},{"d":"2011-04","v":0.6283},{"d":"2011-05","v":0.6697},{"d":"2011-06","v":0.7266},{"d":"2011-07","v":0.661},{"d":"2011-08","v":0.6395},{"d":"2011-09","v":0.6611},{"d":"2011-10","v":0.7005},{"d":"2011-11","v":0.7316},{"d":"2011-12","v":0.7465},{"d":"2012-01","v":0.777},{"d":"2012-02","v":0.7642},{"d":"2012-03","v":0.5816},{"d":"2012-04","v":0.5689},{"d":"2012-05","v":0.6834},{"d":"2012-06","v":0.691},{"d":"2012-07","v":0.7191},{"d":"2012-08","v":0.6835},{"d":"2012-09","v":0.7301},{"d":"2012-10","v":0.707},{"d":"2012-11","v":0.7525},{"d":"2012-12","v":0.7289},{"d":"2013-01","v":0.696},{"d":"2013-02","v":0.7055},{"d":"2013-03","v":0.7217},{"d":"2013-04","v":0.7614},{"d":"2013-05","v":0.7339},{"d":"2013-06","v":0.7707},{"d":"2013-07","v":0.7085},{"d":"2013-08","v":0.711},{"d":"2013-09","v":0.7644},{"d":"2013-10","v":0.6736},{"d":"2013-11","v":0.7218},{"d":"2013-12","v":0.6587},{"d":"2014-01","v":0.6766},{"d":"2014-02","v":0.6984},{"d":"2014-03","v":0.6625},{"d":"2014-04","v":0.6793},{"d":"2014-05","v":0.6435},{"d":"2014-06","v":0.693},{"d":"2014-07","v":0.7192},{"d":"2014-08","v":0.7274},{"d":"2014-09","v":0.7668},{"d":"2014-10","v":0.7354},{"d":"2014-11","v":0.6841},{"d":"2014-12","v":0.7001},{"d":"2015-01","v":0.6722},{"d":"2015-02","v":0.643},{"d":"2015-03","v":0.6503},{"d":"2015-04","v":0.6827},{"d":"2015-05","v":0.7441},{"d":"2015-06","v":0.7068},{"d":"2015-07","v":0.674},{"d":"2015-08","v":0.6706},{"d":"2015-09","v":0.645},{"d":"2020-01","v":0.75},{"d":"2020-02","v":0.7277},{"d":"2020-03","v":0.7176},{"d":"2020-04","v":0.7368},{"d":"2020-05","v":0.745},{"d":"2020-06","v":0.7276},{"d":"2020-07","v":0.7084},{"d":"2020-08","v":0.6998},{"d":"2020-09","v":0.6907},{"d":"2020-10","v":0.7166},{"d":"2020-11","v":0.6615},{"d":"2020-12","v":0.6898},{"d":"2021-01","v":0.6919},{"d":"2021-02","v":0.6768},{"d":"2021-03","v":0.6714},{"d":"2021-04","v":0.7239},{"d":"2021-05","v":0.7022},{"d":"2021-06","v":0.6596},{"d":"2021-07","v":0.6642},{"d":"2021-08","v":0.6968},{"d":"2021-09","v":0.6339},{"d":"2021-10","v":0.6204},{"d":"2021-11","v":0.6764},{"d":"2021-12","v":0.706},{"d":"2022-01","v":0.8219},{"d":"2022-02","v":0.7974},{"d":"2022-03","v":0.7983},{"d":"2022-04","v":0.8125},{"d":"2022-05","v":0.7835},{"d":"2022-06","v":0.7508},{"d":"2022-07","v":0.7496},{"d":"2022-08","v":0.7768},{"d":"2022-09","v":0.7548},{"d":"2022-10","v":0.7533},{"d":"2022-11","v":0.8369},{"d":"2022-12","v":0.8209},{"d":"2023-01","v":0.7604},{"d":"2023-02","v":0.7692},{"d":"2023-03","v":0.7701},{"d":"2023-04","v":0.7416},{"d":"2023-05","v":0.7715},{"d":"2023-06","v":0.7682},{"d":"2023-07","v":0.7768},{"d":"2023-08","v":0.7844},{"d":"2023-09","v":0.7768},{"d":"2023-10","v":0.7787},{"d":"2023-11","v":0.7843},{"d":"2023-12","v":0.7775},{"d":"2024-01","v":0.7851},{"d":"2024-02","v":0.8037},{"d":"2024-03","v":0.7586},{"d":"2024-04","v":0.7547},{"d":"2024-05","v":0.6787},{"d":"2024-06","v":0.7342},{"d":"2024-07","v":0.685},{"d":"2024-08","v":0.7067},{"d":"2024-09","v":0.6431},{"d":"2024-10","v":0.696},{"d":"2024-11","v":0.6829},{"d":"2024-12","v":0.6545},{"d":"2025-01","v":0.6517},{"d":"2025-02","v":0.727},{"d":"2025-03","v":0.7325},{"d":"2025-04","v":0.7269},{"d":"2025-05","v":0.7064},{"d":"2025-06","v":0.7376},{"d":"2025-07","v":0.7759},{"d":"2025-08","v":0.8649},{"d":"2025-09","v":0.8287},{"d":"2025-10","v":0.8869},{"d":"2025-11","v":0.8099},{"d":"2025-12","v":0.9036},{"d":"2026-01","v":0.8308},{"d":"2026-02","v":0.8737},{"d":"2026-03","v":0.8165},{"d":"2026-04","v":0.8758},{"d":"2026-05","v":0.8155},{"d":"2026-06","v":0.8295},{"d":"2026-07","v":0.7656}],"share_yearly":[{"y":1992,"v":0.4193},{"y":1993,"v":0.4586},{"y":1994,"v":0.638},{"y":1995,"v":0.647},{"y":1996,"v":0.6218},{"y":1997,"v":0.7267},{"y":1998,"v":0.6851},{"y":1999,"v":0.6488},{"y":2000,"v":0.6844},{"y":2001,"v":0.516},{"y":2002,"v":0.5785},{"y":2003,"v":0.7028},{"y":2004,"v":0.7637},{"y":2005,"v":0.7434},{"y":2006,"v":0.6942},{"y":2007,"v":0.6442},{"y":2008,"v":0.6743},{"y":2009,"v":0.6569},{"y":2010,"v":0.7084},{"y":2011,"v":0.6755},{"y":2012,"v":0.6989},{"y":2013,"v":0.7189},{"y":2014,"v":0.6989},{"y":2015,"v":0.6765},{"y":2020,"v":0.7143},{"y":2021,"v":0.6769},{"y":2022,"v":0.7881},{"y":2023,"v":0.7716},{"y":2024,"v":0.7153},{"y":2025,"v":0.7793},{"y":2026,"v":0.8296}],"boom":[{"d":"2019-06","world":6101.3628,"faq":null,"kib":null},{"d":"2019-07","world":5999.3655,"faq":null,"kib":null},{"d":"2019-08","world":5751.5002,"faq":null,"kib":null},{"d":"2019-09","world":5707.7723,"faq":null,"kib":null},{"d":"2019-10","world":5584.7266,"faq":null,"kib":null},{"d":"2019-11","world":5951.7004,"faq":null,"kib":null},{"d":"2019-12","world":5926.7852,"faq":null,"kib":null},{"d":"2020-01","world":5733.026,"faq":4300.0,"kib":2150.0},{"d":"2020-02","world":5496.4118,"faq":4000.0,"kib":2150.0},{"d":"2020-03","world":5573.9532,"faq":4000.0,"kib":2000.0},{"d":"2020-04","world":5292.9669,"faq":3900.0,"kib":1900.0},{"d":"2020-05","world":5369.0519,"faq":4000.0,"kib":1900.0},{"d":"2020-06","world":5291.2054,"faq":3850.0,"kib":1850.0},{"d":"2020-07","world":5505.3276,"faq":3900.0,"kib":1900.0},{"d":"2020-08","world":5858.7969,"faq":4100.0,"kib":2100.0},{"d":"2020-09","world":5936.1768,"faq":4100.0,"kib":2100.0},{"d":"2020-10","world":5581.5857,"faq":4000.0,"kib":2000.0},{"d":"2020-11","world":5895.7849,"faq":3900.0,"kib":2000.0},{"d":"2020-12","world":5798.4378,"faq":4000.0,"kib":2000.0},{"d":"2021-01","world":5781.279,"faq":4000.0,"kib":1900.0},{"d":"2021-02","world":5909.9937,"faq":4000.0,"kib":1900.0},{"d":"2021-03","world":5957.2783,"faq":4000.0,"kib":2000.0},{"d":"2021-04","world":5940.2543,"faq":4300.0,"kib":2250.0},{"d":"2021-05","world":6195.0581,"faq":4350.0,"kib":2250.0},{"d":"2021-06","world":6595.3518,"faq":4350.0,"kib":2250.0},{"d":"2021-07","world":7332.4337,"faq":4870.0,"kib":2250.0},{"d":"2021-08","world":7391.1429,"faq":5150.0,"kib":2650.0},{"d":"2021-09","world":8124.4703,"faq":5150.0,"kib":2650.0},{"d":"2021-10","world":8381.1983,"faq":5200.0,"kib":2650.0},{"d":"2021-11","world":8501.412,"faq":5750.0,"kib":2750.0},{"d":"2021-12","world":8853.2432,"faq":6250.0,"kib":3100.0},{"d":"2022-01","world":8516.694,"faq":7000.0,"kib":3100.0},{"d":"2022-02","world":8464.6965,"faq":6750.0,"kib":2950.0},{"d":"2022-03","world":8204.7815,"faq":6550.0,"kib":2750.0},{"d":"2022-04","world":8061.7419,"faq":6550.0,"kib":2750.0},{"d":"2022-05","world":8232.5163,"faq":6450.0,"kib":2600.0},{"d":"2022-06","world":8590.5674,"faq":6450.0,"kib":2600.0},{"d":"2022-07","world":8337.4052,"faq":6250.0,"kib":2250.0},{"d":"2022-08","world":9076.0888,"faq":7050.0,"kib":2700.0},{"d":"2022-09","world":9339.7681,"faq":7050.0,"kib":2700.0},{"d":"2022-10","world":8695.2713,"faq":6550.0,"kib":2600.0},{"d":"2022-11","world":7647.5377,"faq":6400.0,"kib":2400.0},{"d":"2022-12","world":7492.0607,"faq":6150.0,"kib":2450.0},{"d":"2023-01","world":7758.5722,"faq":5900.0,"kib":2200.0},{"d":"2023-02","world":8385.3259,"faq":6450.0,"kib":2450.0},{"d":"2023-03","world":8764.5314,"faq":6750.0,"kib":2500.0},{"d":"2023-04","world":9506.6602,"faq":7050.0,"kib":2900.0},{"d":"2023-05","world":10044.7397,"faq":7750.0,"kib":3750.0},{"d":"2023-06","world":10739.6067,"faq":8250.0,"kib":4250.0},{"d":"2023-07","world":10299.1291,"faq":8000.0,"kib":4000.0},{"d":"2023-08","world":10199.3629,"faq":8000.0,"kib":4000.0},{"d":"2023-09","world":10169.8652,"faq":7900.0,"kib":4000.0},{"d":"2023-10","world":9824.4757,"faq":7650.0,"kib":3900.0},{"d":"2023-11","world":10199.5923,"faq":8000.0,"kib":3750.0},{"d":"2023-12","world":11253.3417,"faq":8750.0,"kib":4050.0},{"d":"2024-01","world":12418.214,"faq":9750.0,"kib":4250.0},{"d":"2024-02","world":13063.8439,"faq":10500.0,"kib":5250.0},{"d":"2024-03","world":14171.0516,"faq":10750.0,"kib":5100.0},{"d":"2024-04","world":16232.1184,"faq":12250.0,"kib":5750.0},{"d":"2024-05","world":15470.4664,"faq":10500.0,"kib":5400.0},{"d":"2024-06","world":16683.8293,"faq":12250.0,"kib":5650.0},{"d":"2024-07","world":17517.8537,"faq":12000.0,"kib":5900.0},{"d":"2024-08","world":17687.6642,"faq":12500.0,"kib":6250.0},{"d":"2024-09","world":19824.4302,"faq":12750.0,"kib":6750.0},{"d":"2024-10","world":17960.4668,"faq":12500.0,"kib":6500.0},{"d":"2024-11","world":18304.2623,"faq":12500.0,"kib":6500.0},{"d":"2024-12","world":19099.2744,"faq":12500.0,"kib":6500.0},{"d":"2025-01","world":19947.6693,"faq":13000.0,"kib":7000.0},{"d":"2025-02","world":21320.3775,"faq":15500.0,"kib":7750.0},{"d":"2025-03","world":20820.2697,"faq":15250.0,"kib":7600.0},{"d":"2025-04","world":19946.681,"faq":14500.0,"kib":7200.0},{"d":"2025-05","world":19110.4919,"faq":13500.0,"kib":6250.0},{"d":"2025-06","world":15590.3049,"faq":11500.0,"kib":5750.0},{"d":"2025-07","world":13210.6923,"faq":10250.0,"kib":5250.0},{"d":"2025-08","world":15608.4636,"faq":13500.0,"kib":6500.0},{"d":"2025-09","world":16290.5988,"faq":13500.0,"kib":6500.0},{"d":"2025-10","world":16349.1578,"faq":14500.0,"kib":7000.0},{"d":"2025-11","world":16914.632,"faq":13700.0,"kib":6800.0},{"d":"2025-12","world":14940.6116,"faq":13500.0,"kib":null},{"d":"2026-01","world":15045.5967,"faq":12500.0,"kib":null},{"d":"2026-02","world":14020.4342,"faq":12250.0,"kib":null},{"d":"2026-03","world":14697.3717,"faq":12000.0,"kib":null},{"d":"2026-04","world":13416.7089,"faq":11750.0,"kib":null},{"d":"2026-05","world":13794.6347,"faq":11250.0,"kib":null},{"d":"2026-06","world":13863.3793,"faq":11500.0,"kib":null},{"d":"2026-07","world":15020.2004,"faq":11500.0,"kib":null},{"d":"2026-08","world":null,"faq":12000.0,"kib":null}],"decomp":{"faq_2020":4004.1667,"faq_2025":13516.6667,"multiple":3.3757,"world_pct":95.6857,"fx_pct":-2.3287,"share_pct":7.1618},"peaks":{"faq_peak":15500.0,"faq_peak_d":"2025-02","faq_last":12000.0,"faq_last_d":"2026-08","world_peak":5.7991,"world_peak_d":"2025-02","world_last":4.0836,"world_last_d":"2026-07"},"passthrough":[{"period":"1992\u20132015","grade":"Robusta FAQ","months":230,"same_month":0.6499,"same_month_se":0.0946,"gap_closed_per_month":0.252,"half_life_months":2.3877,"rises":0.6997,"falls":0.5746,"rise_vs_fall_p":0.6302},{"period":"1992\u20132015","grade":"Robusta kiboko","months":230,"same_month":0.6592,"same_month_se":0.1214,"gap_closed_per_month":0.2705,"half_life_months":2.1973,"rises":0.5925,"falls":0.7601,"rise_vs_fall_p":0.5795},{"period":"1992\u20132015","grade":"Arabica parchment","months":230,"same_month":0.3729,"same_month_se":0.1022,"gap_closed_per_month":0.2188,"half_life_months":2.807,"rises":0.4516,"falls":0.2176,"rise_vs_fall_p":0.4791},{"period":"2020\u20132026","grade":"Robusta FAQ","months":75,"same_month":0.7194,"same_month_se":0.1512,"gap_closed_per_month":0.234,"half_life_months":2.6001,"rises":0.9713,"falls":0.475,"rise_vs_fall_p":0.056},{"period":"2020\u20132026","grade":"Robusta kiboko","months":67,"same_month":0.7895,"same_month_se":0.1107,"gap_closed_per_month":0.2065,"half_life_months":2.9969,"rises":1.0109,"falls":0.5518,"rise_vs_fall_p":0.3001},{"period":"2020\u20132026","grade":"Arabica parchment","months":75,"same_month":0.4144,"same_month_se":0.1136,"gap_closed_per_month":0.0739,"half_life_months":9.027,"rises":0.484,"falls":0.328,"rise_vs_fall_p":0.6119}],"calendar":{"months":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"rob":[7.4,7.76,7.61,6.86,8.21,10.89,11.51,11.23,9.7,7.85,7.12,6.78],"ara":[8.59,9.91,11.51,12.11,10.52,8.27,6.76,6.38,4.29,6.17,9.05,8.18]},"risk":[{"price":"Robusta FAQ","monthly":7.169,"year":21.0202,"worst":-52.3601,"worst_d":"2001-10"},{"price":"Robusta kiboko","monthly":8.2673,"year":27.3132,"worst":-64.4134,"worst_d":"2001-09"},{"price":"Arabica parchment","monthly":6.5702,"year":27.124,"worst":-56.6255,"worst_d":"2012-03"},{"price":"Maize, Kampala retail","monthly":13.4581,"year":45.5709,"worst":-46.2906,"worst_d":"2024-05"}],"kpi":{"last_fy":"2025/26","last_bags":8372382.0,"record_usd_m":2210.53,"record_usd_fy":"2024/25","bags_2015_16":3315567.0,"corrections":14,"reports":80}}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('report-data').textContent);
+const fmt0 = d3.format(',.0f'), fmt1 = d3.format('.1f'), fmt2 = d3.format('.2f'), sgn0 = d3.format('+.0f');
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const pTxt = p => p < 0.001 ? 'p < 0.001' : 'p = ' + (+p.toPrecision(2)).toString();
+const P = s => { const [y, m] = s.split('-').map(Number); return new Date(y, m - 1, 15); };
+const tip = document.getElementById('tip');
+function showTip(html, ev){
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect(), pad = 14;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+const hideTip = () => { tip.style.opacity = 0; };
+const row = (k, v, c) => `<div class="row"><span>${c ? `<i class="dot" style="background:${c}"></i>` : ''}${k}</span><b>${v}</b></div>`;
+function frame(el, h, m){
+  if (typeof el === 'string') el = document.getElementById(el);
+  el.innerHTML = '';
+  const W = Math.max(260, el.clientWidth);
+  const svg = d3.select(el).append('svg').attr('width', W).attr('height', h).attr('viewBox', `0 0 ${W} ${h}`);
+  const g = svg.append('g').attr('transform', `translate(${m.l},${m.t})`);
+  return {el, svg, g, w: W - m.l - m.r, h: h - m.t - m.b};
+}
+function yGrid(f, y, fmt, n){
+  f.g.append('g').call(d3.axisLeft(y).ticks(n || 5).tickSize(-f.w).tickFormat(fmt))
+    .call(a => a.selectAll('.tick line').attr('stroke', d => d === 0 ? css('--ink-2') : css('--grid'))).call(a => a.selectAll('.tick text').attr('x', -6));
+}
+function timeAxis(f, x, every){
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(d3.timeYear.every(every || 1)).tickFormat(d3.timeFormat(innerWidth < 600 ? "'%y" : '%Y')).tickSize(4))
+    .call(a => a.selectAll('.tick line').attr('stroke', css('--rule')));
+}
+function hoverLine(f, x, dates, html){
+  const cross = f.g.append('line').attr('y1', 0).attr('y2', f.h).attr('stroke', css('--ink-2')).attr('opacity', 0);
+  f.g.append('rect').attr('width', f.w).attr('height', f.h).attr('fill','transparent')
+    .on('pointermove', ev => { const t = x.invert(d3.pointer(ev)[0]); const i = d3.minIndex(dates, d => Math.abs(d - t));
+      cross.attr('x1', x(dates[i])).attr('x2', x(dates[i])).attr('opacity', .45); showTip(html(i), ev); })
+    .on('pointerleave', () => { hideTip(); cross.attr('opacity', 0); });
+}
+
+function fill(){
+  const K = D.kpi, last = D.annual[D.annual.length - 1];
+  document.getElementById('k-bags').innerHTML = fmt1(K.last_bags / 1e6) + '<small>m bags</small>';
+  document.getElementById('k-bags-l').textContent = `Record exports in ${K.last_fy} (preliminary), against ${fmt1(K.bags_2015_16 / 1e6)} million in 2015/16`;
+  const recent = D.share_yearly.filter(d => d.y >= 2022);
+  document.getElementById('k-share').innerHTML = Math.round(100 * d3.mean(recent, d => d.v)) + '<small>%</small>';
+  document.getElementById('k-boom').innerHTML = Math.round(D.decomp.world_pct) + '<small>%</small>';
+  document.getElementById('k-boom-l').textContent = `Share of the ${fmt1(D.decomp.multiple)}× rise in robusta farm-gate prices from 2020 to 2025 explained by the world price`;
+  document.getElementById('m-reports').textContent = `Exports and farm-gate prices read automatically from ${K.reports} monthly reports, each summary checked against the report's own tables; ${K.corrections} reports needed a correction, each recorded`;
+}
+
+/* 01 exports */
+function exportsChart(){
+  const A = D.annual, isS = innerWidth < 600;
+  const f = frame('c-exports', isS ? 260 : 320, {t:12, r:10, b:28, l:36});
+  const x = d3.scaleBand().domain(A.map(d => d.fy)).range([0, f.w]).paddingInner(.18);
+  const y = d3.scaleLinear().domain([0, 9]).range([f.h, 0]);
+  yGrid(f, y, d => d, 5);
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).tickValues(A.map(d => d.fy).filter(s => +s.slice(0, 4) % (isS ? 20 : 10) === 0)).tickFormat(s => s.slice(0, 4)).tickSize(0))
+    .call(a => a.selectAll('text').attr('dy', '1.2em'));
+  A.forEach(d => {
+    const tipH = ev => showTip(`<div class="t">FY ${d.fy}</div>${row('Total', fmt2(d.total / 1e6) + 'm bags')}${d.rob ? row('Robusta', fmt2(d.rob / 1e6) + 'm', css('--rob')) + row('Arabica', fmt2(d.ara / 1e6) + 'm', css('--ara')) : ''}${row('Value', 'US$' + fmt0(d.usd_m) + 'm')}`, ev);
+    if (d.rob == null){
+      f.g.append('rect').attr('x', x(d.fy)).attr('width', x.bandwidth()).attr('y', y(d.total / 1e6)).attr('height', f.h - y(d.total / 1e6)).attr('fill', css('--rule')).on('pointermove', tipH).on('pointerleave', hideTip);
+    } else {
+      f.g.append('rect').attr('x', x(d.fy)).attr('width', x.bandwidth()).attr('y', y(d.rob / 1e6)).attr('height', f.h - y(d.rob / 1e6)).attr('fill', css('--rob')).on('pointermove', tipH).on('pointerleave', hideTip);
+      f.g.append('rect').attr('x', x(d.fy)).attr('width', x.bandwidth()).attr('y', y((d.rob + d.ara) / 1e6)).attr('height', Math.max(0, y(d.rob / 1e6) - y((d.rob + d.ara) / 1e6) - 1)).attr('fill', css('--ara')).on('pointermove', tipH).on('pointerleave', hideTip);
+    }
+  });
+  const last = A[A.length - 1];
+  f.g.append('text').attr('class','ann-strong').attr('x', x(last.fy) + x.bandwidth()).attr('y', y(last.total / 1e6) - 8).attr('text-anchor','end').text(`${last.fy}: ${fmt1(last.total / 1e6)}m`);
+  const v = A.filter(d => d.usd_m != null), maxV = v.reduce((a, b) => b.usd_m > a.usd_m ? b : a);
+  const cards = [['Volume', `${fmt1(last.total / 1e6)}m bags`, `Exports in ${last.fy}, a record and ${fmt1(last.total / D.kpi.bags_2015_16)}× the ${fmt1(D.kpi.bags_2015_16 / 1e6)} million of 2015/16.`],
+                 ['Value', `US$${fmt1(maxV.usd_m / 1000)}bn`, `Record export earnings in ${maxV.fy}, with ${last.fy} close behind (US$${fmt1(last.usd_m / 1000)}bn).`],
+                 ['Robusta', `${Math.round(100 * last.rob / last.total)}%`, `Robusta's share of ${last.fy} volume. Arabica peaked at a quarter to 30% in 2011–2018.`]];
+  document.getElementById('export-cards').innerHTML = cards.map(([t, val, p]) => `<div class="panel"><span class="tag wet"><i></i>${t}</span><div class="big num">${val}</div><p>${p}</p></div>`).join('');
+}
+
+/* 02 world */
+function worldChart(){
+  const E = D.exports_vs_world, isS = innerWidth < 600;
+  const f = frame('c-world', isS ? 250 : 300, {t:12, r:12, b:28, l:36});
+  const dates = E.map(d => P(d.d));
+  const x = d3.scaleTime().domain(d3.extent(dates)).range([0, f.w]);
+  const y = d3.scaleLinear().domain([0, 9]).range([f.h, 0]);
+  yGrid(f, y, d => '$' + d, 5); timeAxis(f, x);
+  [['rob_w', '--rob', '5 4', 1.6], ['ara_w', '--ara', '5 4', 1.6], ['rob', '--rob', null, 2.4], ['ara', '--ara', null, 2.4]].forEach(([k, c, dash, sw]) =>
+    f.g.append('path').attr('d', d3.line().defined(d => d[k] != null).x((d, i) => x(dates[i])).y(d => y(d[k]))(E)).attr('fill','none').attr('stroke', css(c)).attr('stroke-width', sw).attr('stroke-dasharray', dash));
+  hoverLine(f, x, dates, i => { const d = E[i]; return `<div class="t">${d3.timeFormat('%b %Y')(dates[i])}</div>${row('Robusta exports', '$' + fmt2(d.rob), css('--rob'))}${row('World robusta', '$' + fmt2(d.rob_w))}${row('Arabica exports', '$' + fmt2(d.ara), css('--ara'))}${row('World arabica', '$' + fmt2(d.ara_w))}`; });
+}
+
+/* 03 share */
+function shareChart(){
+  const M = D.share_monthly, Y = D.share_yearly, isS = innerWidth < 600;
+  const f = frame('c-share', isS ? 240 : 290, {t:12, r:12, b:28, l:36});
+  const x = d3.scaleTime().domain([new Date(1992, 0, 1), new Date(2026, 11, 1)]).range([0, f.w]);
+  const y = d3.scaleLinear().domain([30, 100]).range([f.h, 0]);
+  f.g.append('rect').attr('x', x(new Date(2015, 9, 1))).attr('width', x(new Date(2020, 0, 1)) - x(new Date(2015, 9, 1))).attr('y', 0).attr('height', f.h).attr('fill', css('--band'));
+  f.g.append('text').attr('class','ann').attr('x', x(new Date(2017, 10, 1))).attr('y', f.h / 2).attr('text-anchor','middle').text('not published');
+  yGrid(f, y, d => d + '%', 7); timeAxis(f, x, isS ? 8 : 4);
+  const md = M.map(d => ({t: P(d.d), v: 100 * d.v}));
+  f.g.append('path').attr('d', d3.line().defined((d, i) => i === 0 || (d.t - md[i - 1].t) < 70 * 864e5).x(d => x(d.t)).y(d => y(Math.min(100, d.v)))(md)).attr('fill','none').attr('stroke', css('--muted')).attr('stroke-width', 1).attr('opacity', .7);
+  f.g.selectAll('circle').data(Y).join('circle').attr('cx', d => x(new Date(d.y, 6, 1))).attr('cy', d => y(100 * d.v)).attr('r', 4.5).attr('fill', css('--ink')).attr('stroke', css('--panel')).attr('stroke-width', 1.5)
+    .on('pointermove', (ev, d) => showTip(`<div class="t">${d.y}</div>${row("Farmers' share", Math.round(100 * d.v) + '%')}`, ev)).on('pointerleave', hideTip);
+  [[1992, 'after liberalisation'], [2001, 'world price crash']].forEach(([yr, lab]) => { const d = Y.find(e => e.y === yr); if (d) f.g.append('text').attr('class','ann').attr('x', x(new Date(yr, 6, 1)) + 8).attr('y', y(100 * d.v) + 16).text(`${Math.round(100 * d.v)}% · ${lab}`); });
+}
+
+/* 04 pass-through */
+function ptChart(){
+  const R = D.passthrough, isS = innerWidth < 600;
+  const grades = ['Robusta FAQ', 'Robusta kiboko', 'Arabica parchment'];
+  const f = frame('c-pt', 64 * grades.length + 40, {t:8, r: isS ? 70 : 140, b:30, l: isS ? 104 : 140});
+  const y = d3.scaleBand().domain(grades).range([0, f.h]).padding(.2);
+  const yy = d3.scaleBand().domain(['1992–2015', '2020–2026']).range([0, y.bandwidth()]).padding(.2);
+  const x = d3.scaleLinear().domain([0, 1.1]).range([0, f.w]);
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(isS ? 3 : 6).tickSize(-f.h).tickFormat(d3.format('.0%'))).call(a => a.selectAll('.tick line').attr('stroke', css('--grid'))).call(a => a.selectAll('.tick text').attr('dy','1.1em'));
+  grades.forEach(g => f.g.append('text').attr('x', -12).attr('y', y(g) + y.bandwidth()/2 + 4).attr('text-anchor','end').attr('class','lab').style('fill', css('--ink')).text(g));
+  R.forEach(r => {
+    const cy = y(r.grade) + yy(r.period) + yy.bandwidth()/2, c = r.period === '2020–2026' ? css('--ink') : css('--muted');
+    const lo = r.same_month - 1.96 * r.same_month_se, hi = r.same_month + 1.96 * r.same_month_se;
+    f.g.append('line').attr('x1', x(Math.max(0, lo))).attr('x2', x(Math.min(1.1, hi))).attr('y1', cy).attr('y2', cy).attr('stroke', c).attr('stroke-width', 2).attr('opacity', .6);
+    f.g.append('circle').attr('cx', x(r.same_month)).attr('cy', cy).attr('r', 6.5).attr('fill', c).attr('stroke', css('--panel')).attr('stroke-width', 2)
+      .on('pointermove', ev => showTip(`<div class="t">${r.grade} · ${r.period}</div>${row('Same month', Math.round(100 * r.same_month) + '%')}${row('95% interval', `${Math.round(100 * lo)}–${Math.round(100 * hi)}%`)}${row('Gap half-life', fmt1(r.half_life_months) + ' months')}${row('Rises / falls', `${Math.round(100 * r.rises)}% / ${Math.round(100 * r.falls)}%`)}`, ev))
+      .on('pointerleave', hideTip);
+    f.g.append('text').attr('class', r.period === '2020–2026' ? 'ann-strong' : 'ann').attr('x', f.w + 8).attr('y', cy + 4).text(isS ? `${fmt1(r.half_life_months)} mo` : `${Math.round(100 * r.same_month)}% · half-life ${fmt1(r.half_life_months)} mo`);
+  });
+}
+
+/* 05 boom */
+function boomChart(){
+  const B = D.boom, isS = innerWidth < 600;
+  const f = frame('c-boom', isS ? 260 : 320, {t:12, r:12, b:28, l:48});
+  const dates = B.map(d => P(d.d));
+  const x = d3.scaleTime().domain(d3.extent(dates)).range([0, f.w]);
+  const y = d3.scaleLinear().domain([0, 22500]).range([f.h, 0]);
+  yGrid(f, y, d3.format(',.0f'), 5); timeAxis(f, x);
+  [['world', '--rob', '5 4', 1.8], ['kib', '--muted', null, 2.2], ['faq', '--ink', null, 2.6]].forEach(([k, c, dash, sw]) =>
+    f.g.append('path').attr('d', d3.line().defined(d => d[k] != null).x((d, i) => x(dates[i])).y(d => y(d[k]))(B)).attr('fill','none').attr('stroke', css(c)).attr('stroke-width', sw).attr('stroke-dasharray', dash));
+  const pk = D.peaks, pi = B.findIndex(d => d.d === pk.faq_peak_d);
+  if (pi >= 0) f.g.append('text').attr('class','ann-strong').attr('x', x(dates[pi]) - 10).attr('y', y(B[pi].faq) - 10).attr('text-anchor','end').text(`FAQ peak UGX ${fmt0(pk.faq_peak)} · ${d3.timeFormat('%b %Y')(P(pk.faq_peak_d))}`);
+  hoverLine(f, x, dates, i => { const d = B[i]; return `<div class="t">${d3.timeFormat('%b %Y')(dates[i])}</div>${row('World robusta', d.world ? 'UGX ' + fmt0(d.world) : '–', css('--rob'))}${row('Farm-gate FAQ', d.faq ? 'UGX ' + fmt0(d.faq) : '–', css('--ink'))}${row('Farm-gate kiboko', d.kib ? 'UGX ' + fmt0(d.kib) : '–', css('--muted'))}`; });
+  const c = D.decomp;
+  const cards = [['2020 to 2025', `${fmt1(c.multiple)}×`, `Rise in the average FAQ price, from UGX ${fmt0(c.faq_2020)} to ${fmt0(c.faq_2025)} per kg.`],
+                 ['World price', `${Math.round(c.world_pct)}%`, `Of that rise came from the world price. The exchange rate contributed ${d3.format('.0f')(c.fx_pct)}% and a higher farmers' share ${d3.format('.0f')(c.share_pct)}%.`],
+                 ['Since the peak', `${d3.format('.0f')(100 * (pk.faq_last / pk.faq_peak - 1))}%`, `FAQ fell from UGX ${fmt0(pk.faq_peak)} (${d3.timeFormat('%b %Y')(P(pk.faq_peak_d))}) to ${fmt0(pk.faq_last)} (${d3.timeFormat('%b %Y')(P(pk.faq_last_d))}); the world price fell ${Math.abs(Math.round(100 * (pk.world_last / pk.world_peak - 1)))}% over the same period.`]];
+  document.getElementById('boom-cards').innerHTML = cards.map(([t, v, p]) => `<div class="panel"><span class="tag wet"><i></i>${t}</span><div class="big num">${v}</div><p>${p}</p></div>`).join('');
+}
+
+/* 06 calendar */
+function calChart(){
+  const C = D.calendar, isS = innerWidth < 600;
+  const f = frame('c-cal', isS ? 220 : 260, {t:12, r:8, b:28, l:36});
+  const x = d3.scaleBand().domain(C.months).range([0, f.w]).paddingInner(.25);
+  const xx = d3.scaleBand().domain(['rob', 'ara']).range([0, x.bandwidth()]).padding(.08);
+  const y = d3.scaleLinear().domain([0, 14]).range([f.h, 0]);
+  yGrid(f, y, d => d + '%', 4);
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).tickFormat(m => isS ? m[0] : m).tickSize(0)).call(a => a.selectAll('text').attr('dy','1.2em'));
+  C.months.forEach((m, i) => [['rob', '--rob', 'Robusta'], ['ara', '--ara', 'Arabica']].forEach(([k, c, n]) => {
+    const v = C[k][i], h = f.h - y(v), x0 = x(m) + xx(k), w = xx.bandwidth();
+    f.g.append('path').attr('d', `M${x0},${f.h} v${-(h - 3)} a3,3 0 0 1 3,-3 h${w - 6} a3,3 0 0 1 3,3 v${h - 3} Z`).attr('fill', css(c))
+      .on('pointermove', ev => showTip(`<div class="t">${m}</div>${row(n, fmt1(v) + '% of the year', css(c))}`, ev)).on('pointerleave', hideTip);
+  }));
+  f.g.append('line').attr('x1', 0).attr('x2', f.w).attr('y1', y(100 / 12)).attr('y2', y(100 / 12)).attr('stroke', css('--ink-2')).attr('stroke-dasharray', '4 4');
+}
+
+function riskTable(){
+  document.querySelector('#t-risk tbody').innerHTML = D.risk.map(r => `<tr class="${r.price.startsWith('Maize') ? 'ref' : ''}"><td class="reg">${r.price}</td><td class="r num">${Math.round(r.monthly)}%</td><td class="r num">${Math.round(r.year)}%</td><td class="r num">−${Math.abs(Math.round(r.worst))}% <small style="color:var(--muted)">(to ${d3.timeFormat('%b %Y')(P(r.worst_d))})</small></td></tr>`).join('');
+}
+
+function drawAll(){ exportsChart(); worldChart(); shareChart(); ptChart(); boomChart(); calChart(); }
+fill(); riskTable(); drawAll();
+let raf; const redraw = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(drawAll); };
+let lastW = innerWidth; addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; redraw(); } });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
+new MutationObserver(redraw).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+})();
+</script>
+
+</body></html>

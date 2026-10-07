@@ -1,5 +1,7 @@
 # Uganda Coffee: Exports, World Prices and What Reaches Farmers
 
+> Part of a series on Uganda's agriculture. **[Read the synthesis of all five analyses →](https://tayeruta.github.io/uganda-agriculture/)**
+
 Six decades of Uganda's coffee exports, and how world coffee prices pass through to the prices farmers are paid. Built from the Coffee Department's own statistics and its monthly reports, with IMF world prices.
 
 **Read the reports:**

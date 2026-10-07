@@ -98,6 +98,7 @@ python scripts/build_report_data.py          # refresh the numbers in the report
 - [Uganda rainfall analysis](https://github.com/TayeRuta/uganda-rainfall-analysis): national, regional and Indian Ocean Dipole analysis of Uganda's rainfall
 - [Uganda food prices](https://github.com/TayeRuta/uganda-food-prices): rainfall shocks and food prices
 - [Uganda irrigation](https://github.com/TayeRuta/uganda-irrigation): where irrigation is needed and where water is within reach
+- [Uganda food trade](https://github.com/TayeRuta/uganda-food-trade): staple food trade with neighbouring countries, source gaps and price links
 
 ## License
 

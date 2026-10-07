@@ -93,6 +93,12 @@ python scripts/build_report_data.py          # refresh the numbers in the report
 - **Price basis.** Farm-gate prices are national averages reported by the Coffee Department; prices vary by region and buyer.
 - **Benchmark data.** FAOSTAT area and yield are estimated or imputed for many African producers, Uganda included. Export unit values average across grades and buyers. USDA figures are estimates built from production.
 
+## Related projects
+
+- [Uganda rainfall analysis](https://github.com/TayeRuta/uganda-rainfall-analysis): national, regional and Indian Ocean Dipole analysis of Uganda's rainfall
+- [Uganda food prices](https://github.com/TayeRuta/uganda-food-prices): rainfall shocks and food prices
+- [Uganda irrigation](https://github.com/TayeRuta/uganda-irrigation): where irrigation is needed and where water is within reach
+
 ## License
 
 Code and analysis: [MIT](LICENSE). The source data keep their providers' terms.

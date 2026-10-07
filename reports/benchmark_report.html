@@ -1,0 +1,600 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Uganda Coffee Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap">
+<style>
+/* Layout: single 1080px report column — masthead, KPI strip, then numbered findings, each = headline + chart panel + takeaway */
+:root{
+  --bg:#f3f5f1; --panel:#ffffff; --ink:#132019; --ink-2:#4b5a51; --muted:#7a877f; --rule:#dfe4dd; --grid:#eceee9;
+  --accent:#16825a; --wet:#2b6c9e; --wet-deep:#1b4a70; --dry:#c4572e; --dry-deep:#8d3416; --neutral:#ecebe6;
+  --mam:#16825a; --son:#8a63d2; --band:#eef3ec; --chip:#e8eee6;
+  --f-display:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Noto Sans JP",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1411; --panel:#161d19; --ink:#eaf0eb; --ink-2:#b2beb6; --muted:#859189; --rule:#27302b; --grid:#1f2723;
+  --accent:#3fae82; --wet:#4a8cc4; --wet-deep:#8cc0ec; --dry:#d9693f; --dry-deep:#f0a283; --neutral:#2a302c;
+  --mam:#2e9e74; --son:#9277e6; --band:#1a241f; --chip:#1d2622; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1411; --panel:#161d19; --ink:#eaf0eb; --ink-2:#b2beb6; --muted:#859189; --rule:#27302b; --grid:#1f2723;
+  --accent:#3fae82; --wet:#4a8cc4; --wet-deep:#8cc0ec; --dry:#d9693f; --dry-deep:#f0a283; --neutral:#2a302c;
+  --mam:#2e9e74; --son:#9277e6; --band:#1a241f; --chip:#1d2622; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:20px;padding-block:0 64px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* masthead */
+.mast{padding-block:48px 28px;display:grid;gap:18px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;gap:14px;flex-wrap:wrap}
+.eyebrow span+span{color:var(--muted)}
+.mast h1{font-size:clamp(36px,6.2vw,68px);line-height:1.02;font-weight:800;max-width:15ch}
+.mast h1 em{font-style:normal;color:var(--accent)}
+.dek{font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:62ch;line-height:1.5}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-block:28px 8px;border-top:2px solid var(--ink)}
+.kpi{padding:18px 18px 4px 0;display:grid;gap:6px;align-content:start}
+.kpi+.kpi{padding-left:18px;border-left:1px solid var(--rule)}
+.kpi .v{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,3.6vw,42px);line-height:1;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:.45em;font-weight:500;color:var(--ink-2);margin-left:3px}
+.kpi .l{font-size:14px;color:var(--ink-2);line-height:1.4}
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--chip);color:var(--ink-2);max-width:100%;white-space:normal;line-height:1.3}
+.tag i{width:7px;height:7px;border-radius:50%;background:var(--muted);display:inline-block}
+.tag.dry i{background:var(--dry)} .tag.wet i{background:var(--wet)}
+
+/* summary */
+.summary{margin-block:36px 12px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px}
+.summary h2{font-size:14px;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.summary ol{margin:0;padding:0;list-style:none;display:grid;gap:14px;counter-reset:k}
+.summary li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;font-size:17px;line-height:1.5}
+.summary li::before{counter-increment:k;content:counter(k);font-family:var(--f-mono);font-size:13px;color:var(--accent);padding-top:3px}
+.summary b{font-weight:600}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-block:28px 8px}
+nav.toc a{font-size:13px;color:var(--ink-2);text-decoration:none;padding:6px 12px;border:1px solid var(--rule);border-radius:99px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--ink);outline:none}
+
+/* sections */
+section.f{padding-block:56px 8px;display:grid;gap:18px;scroll-margin-top:16px}
+.f-head{display:grid;gap:10px;max-width:760px}
+.f-num{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.f-head h2{font-size:clamp(24px,3.2vw,34px);line-height:1.15;font-weight:700}
+.f-head p{color:var(--ink-2);font-size:16.5px;max-width:66ch}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:20px 20px 14px;min-width:0}
+.panel-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 24px;flex-wrap:wrap;margin-bottom:6px}
+.panel-title{font-weight:600;font-size:15px}
+.panel-sub{font-size:13px;color:var(--muted)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sw.line{height:3px;border-radius:2px;width:18px}
+.sw.dash{height:0;border-top:2px dashed var(--ink-2);width:18px;border-radius:0}
+.chart{width:100%;position:relative}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;font-size:15px;color:var(--ink-2);max-width:760px;padding:14px 16px;border-radius:10px;background:var(--band)}
+.note b{color:var(--ink);font-weight:600}
+.note .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+
+/* svg text */
+svg{display:block;overflow:visible}
+svg text{font-family:var(--f-body);fill:var(--muted);font-size:11.5px}
+svg .tick text{font-family:var(--f-mono);font-size:11px}
+svg .tick line{stroke:var(--grid)}
+svg .domain{display:none}
+svg .ann,svg .ann-strong{paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+svg .ann{fill:var(--ink-2);font-size:12px;font-weight:500}
+svg .ann-strong{fill:var(--ink);font-size:12.5px;font-weight:600}
+svg .lab{font-weight:600;font-size:12.5px}
+
+/* table */
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule)}
+th{font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td.r,th.r{text-align:right}
+tr.hi td{font-weight:600}
+.sev{display:inline-block;height:8px;border-radius:4px;background:var(--dry);vertical-align:middle}
+
+/* limits */
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.limits h3{font-size:18px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.limits ul{margin:0;padding-left:18px;display:grid;gap:8px;color:var(--ink-2);font-size:15px}
+.next{border-left:3px solid var(--accent);padding:4px 0 4px 18px;max-width:760px;font-size:17px}
+.next b{font-family:var(--f-display)}
+
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;font-size:15px;padding:10px 0}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted);display:grid;gap:8px;max-width:820px}
+
+/* tooltip */
+#tip{position:fixed;pointer-events:none;z-index:20;background:var(--ink);color:var(--bg);padding:9px 12px;border-radius:8px;font-size:13px;line-height:1.45;min-width:120px;box-shadow:0 6px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .12s}
+#tip .t{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+#tip .row{display:flex;justify-content:space-between;gap:16px}
+#tip .row b{font-family:var(--f-mono);font-weight:500}
+#tip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+
+@media (max-width:820px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:nth-child(3){padding-left:0;border-left:0}
+  .kpi:nth-child(n+3){border-top:1px solid var(--rule);margin-top:6px}
+  .summary{grid-template-columns:1fr;gap:12px}
+  .grid2,.limits{grid-template-columns:1fr}
+}
+@media (max-width:480px){ body{padding-inline:16px} .panel{padding:16px 12px 10px} }
+@media (prefers-reduced-motion:reduce){#tip{transition:none}}
+/* regional additions */
+.score{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+.score th{white-space:nowrap}
+.score td{padding:12px 8px;vertical-align:middle}
+.score th{padding-inline:8px}
+.score td.reg{font-weight:600;white-space:nowrap}
+.score td.reg small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.score tr.ref td{background:var(--band)}
+.bar-cell{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.score td .num{white-space:nowrap}
+.bar-cell i{display:block;height:10px;border-radius:0 4px 4px 0;background:var(--wet);opacity:.85}
+.bar-cell i.var{background:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pill.sig{background:var(--accent);color:var(--panel)}
+.pill.ns{background:var(--chip);color:var(--ink-2)}
+.pill.border{background:transparent;color:var(--ink-2);border:1px dashed var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mini .panel{padding:14px 14px 8px}
+.mini .ph{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.mini .ph b{font-size:14px}
+.callout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.callout .panel{display:grid;gap:6px;align-content:start}
+.callout .big{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.1}
+.callout p{font-size:14.5px;color:var(--ink-2)}
+@media (max-width:820px){.callout{grid-template-columns:1fr}}
+.mapnote{font-size:13px;color:var(--muted)}
+</style>
+<style id="formatting">
+/* Formatting: ink, white and grey with one vermilion origin line. Chart data colours are defined separately and unchanged. */
+:root{
+  --bg:#ffffff; --panel:#f6f5f2; --ink:#1a1a1a; --ink-2:#4a4a4a; --muted:#6b6b6b; --rule:#e6e4df; --grid:#ecebe7;
+  --accent:#1a1a1a; --band:#efeeea; --chip:#e6e4df; --origin:#d13b1f;
+  --f-display:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"Noto Sans JP",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1a1a; --panel:#222221; --ink:#ffffff; --ink-2:#c9c8c4; --muted:#a3a29e; --rule:#34332f; --grid:#2b2a28;
+  --accent:#ffffff; --band:#262624; --chip:#2e2d2a; --origin:#ff7a5c}}
+:root[data-theme="dark"]{
+  --bg:#1a1a1a; --panel:#222221; --ink:#ffffff; --ink-2:#c9c8c4; --muted:#a3a29e; --rule:#34332f; --grid:#2b2a28;
+  --accent:#ffffff; --band:#262624; --chip:#2e2d2a; --origin:#ff7a5c}
+body{font-weight:400;font-feature-settings:"tnum" 1}
+.num,svg .tick text,.kpi .v,.big{font-variant-numeric:tabular-nums}
+/* Headings: Light, sentence case, ink */
+h1,h2,h3{letter-spacing:-.01em}
+.mast h1{font-weight:300;line-height:1.12;max-width:18ch}
+.mast h1 em{font-style:normal;color:var(--ink);font-weight:500}
+.f-head h2{font-weight:300}
+.limits h3,.who h3{font-weight:500}
+.panel-title,.summary b,.zone h3{font-weight:500}
+.kpi .v,.callout .big{font-weight:300}
+/* Labels: Medium, uppercase, tracked, grey */
+.eyebrow{color:var(--muted);font-weight:500;letter-spacing:.14em;font-size:11.5px}
+.eyebrow span+span{color:var(--muted)}
+.f-num,.summary h2,.note .k,th{color:var(--muted);font-weight:500;letter-spacing:.12em}
+.summary li::before{color:var(--muted);font-weight:500}
+/* The origin line: one per page, under the title, starting at the margin and running to the edge */
+.mast{position:relative;padding-top:64px;border-bottom:1px solid var(--rule)}
+/* Runs from the text margin to the right edge of the window, without widening the page */
+.mast::before{content:"";position:absolute;top:30px;left:0;right:calc((100% - 100vw) / 2);height:3px;background:var(--origin)}
+html{overflow-x:clip}
+.kpis{border-top:1px solid var(--ink)}
+/* Accents that were green become ink */
+.pill.sig{background:var(--ink);color:var(--bg)}
+.pill.border{border-color:var(--muted)}
+.conf.high{background:var(--ink);color:var(--bg)}
+.conf.med{border-color:var(--ink);color:var(--ink)}
+.next{border-left-color:var(--ink)}
+nav.toc a{background:var(--bg)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--ink)}
+a{color:var(--ink)!important;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+nav.toc a{text-decoration:none}
+summary:focus-visible,.tabs button:focus-visible{outline-color:var(--ink)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.panel{border-color:var(--rule)}
+</style>
+<div id="tip" role="status" aria-live="polite"></div>
+<style>
+:root{--rob:var(--wet);--ara:var(--dry);--mix:var(--muted)}
+.conf{display:inline-flex;align-items:center;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.conf.high{background:var(--ink);color:var(--bg)}
+.conf.med{border:1.5px solid var(--ink);color:var(--ink)}
+.conf.low{background:var(--chip);color:var(--ink-2)}
+.kpi .conf{justify-self:start}
+.tabs{display:inline-flex;gap:4px;padding:3px;border:1px solid var(--rule);border-radius:99px;background:var(--bg)}
+.tabs button{font:inherit;font-size:13px;border:0;background:transparent;color:var(--ink-2);padding:5px 12px;border-radius:99px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.score tr.ug td{background:var(--band);font-weight:600}
+.grp{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.grp i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.who .panel{display:grid;gap:10px;align-content:start}
+.who h3{font-size:19px;font-weight:500}
+.who ul{margin:0;padding-left:18px;display:grid;gap:7px;font-size:15px;color:var(--ink-2)}
+.who ul b{color:var(--ink);font-weight:600}
+.conf-table td{vertical-align:top}
+.conf-table td:first-child{font-weight:600;min-width:220px}
+.conf-table td.ev{color:var(--ink-2);font-size:13.5px}
+@media (max-width:820px){.who{grid-template-columns:1fr}}
+@media (max-width:480px){.note{grid-template-columns:1fr;gap:4px}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow"><span>Benchmark · Coffee</span><span>Uganda against 21 producers</span><span>2021–2025 averages</span></div>
+  <h1>Uganda's coffee <em>against the world</em></h1>
+  <p class="dek">How Uganda compares with the world's largest coffee producers and with Africa's, on the measures USDA and the International Coffee Organization use: scale, growth, yield, price, stability and home consumption. Peers are chosen by rule, comparisons are made like for like, and where the data is weak or the sources disagree, the gap is shown rather than smoothed over.</p>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="v num" id="k-rank">6th</div><div class="l" id="k-rank-l">Largest producer and exporter in the world; Africa's largest exporter</div><span class="conf high">High confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-growth">5.0<small>% a year</small></div><div class="l">Production growth since 2006–10, the fastest of the ten largest producers</div><span class="conf high">High confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-price">85<small>%</small></div><div class="l">Export price as a share of the world reference for its coffee mix; Vietnam 82%</div><span class="conf med">Medium confidence</span></div>
+  <div class="kpi"><div class="v num" id="k-yield">~⅕</div><div class="l">Uganda's yield per hectare against Vietnam's; Uganda's figure rests on imputed area</div><span class="conf low">Low confidence</span></div>
+</div>
+
+<div class="summary">
+  <h2>Key takeaways</h2>
+  <ol>
+    <li><span><b>Uganda is the world's 6th-largest producer and exporter, and Africa's largest exporter</b>, with about 4.6% of world exports. <span class="conf high">High</span></span></li>
+    <li><span><b>It is the fastest-growing of the ten largest producers</b>, while most West and Central African robusta producers have shrunk. <span class="conf high">High</span></span></li>
+    <li><span><b>Its biggest gap is yield</b>: perhaps a fifth of Vietnam's per hectare. But the figure rests on imputed area, so the size of the gap is uncertain. <span class="conf low">Low</span></span></li>
+    <li><span><b>It is paid about 85% of the world reference for its mix</b>: more than Vietnam and the other African robusta exporters, less than India and Indonesia. <span class="conf med">Medium</span></span></li>
+    <li><span><b>It drinks almost none of its own coffee</b> (about 4%), unlike Ethiopia, Brazil or Indonesia, and its output is moderately stable. <span class="conf high">High</span></span></li>
+    <li><span><b>Its export figures differ by source by 22–25% in the last two years.</b> Cross-country comparisons here use USDA so every country is measured alike. <span class="conf high">High</span></span></li>
+  </ol>
+</div>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#peers">Peers</a><a href="#growth">Growth</a><a href="#yield">Yield</a><a href="#price">Price</a><a href="#stability">Stability</a><a href="#gap">Data gap</a><a href="#meaning">What it means</a><a href="#methods">Methods</a>
+</nav>
+
+<section class="f" id="peers">
+  <div class="f-head">
+    <div class="f-num">01 · Peers</div>
+    <h2>Twenty-two producers, chosen by rule</h2>
+    <p>Every country with at least 1% of world production (2021–2025, USDA) and every African producer above 100,000 bags a year. Each is grouped by what it grows: <i>robusta-led</i> (70% or more robusta), <i>arabica-led</i> (30% or less) or <i>mixed</i>. Figures are 2021–2025 averages in thousand 60-kg bags.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">The peer set</div><div class="panel-sub">Uganda highlighted · ranks among all 94 producing countries</div></div>
+      <div class="tabs" role="group" aria-label="Peer set"><button type="button" data-k="all" aria-pressed="true">All 22</button><button type="button" data-k="ea" aria-pressed="false">East Africa</button><button type="button" data-k="africa" aria-pressed="false">Africa</button><button type="button" data-k="world" aria-pressed="false">World</button></div>
+    </div>
+    <div class="scroll"><table class="score" id="t-peers" style="min-width:780px"><thead><tr>
+      <th>Country</th><th>Grows</th><th class="r">Production</th><th class="r">Exports</th><th class="r">World export share</th><th class="r">Export rank</th><th class="r">Consumed at home</th>
+    </tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+
+<section class="f" id="growth">
+  <div class="f-head">
+    <div class="f-num">02 · Growth</div>
+    <h2>The fastest-growing large producer</h2>
+    <p>Average yearly growth in production between 2006–10 and 2021–25 (USDA). Using five-year averages at each end keeps one good or bad harvest from deciding the result.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Production growth, % a year, 2006–10 to 2021–25</div><div class="panel-sub">Hover for production and export growth</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--rob);border-radius:50%"></i>Robusta-led</span><span><i class="sw" style="background:var(--ara);border-radius:50%"></i>Arabica-led</span><span><i class="sw" style="background:var(--mix);border-radius:50%"></i>Mixed</span></div>
+    </div>
+    <div class="chart" id="c-growth"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-top"><div><div class="panel-title">Production of the seven largest producers, million bags (log scale)</div><div class="panel-sub">USDA market years · a log scale shows growth rates as slopes</div></div></div>
+    <div class="chart" id="c-lines"></div>
+  </div>
+</section>
+
+<section class="f" id="yield">
+  <div class="f-head">
+    <div class="f-num">03 · Yield</div>
+    <h2>The biggest gap, and the least certain number</h2>
+    <p>Green coffee harvested per hectare, 2020–2024 average (FAOSTAT), by group. Solid bars rest on official area figures; pale bars on estimated or imputed area. Compare within a group: robusta and arabica systems differ too much to set against each other.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Yield, kg of green coffee per hectare</div><div class="panel-sub">Hover for the data quality behind each figure</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--ink)"></i>Official area figures</span><span><i class="sw" style="background:var(--ink);opacity:.25"></i>Estimated or imputed area</span></div>
+    </div>
+    <div class="chart" id="c-yield"></div>
+  </div>
+  <div class="note"><span class="k">Why it's uncertain</span><span>FAOSTAT's harvested area for Uganda is imputed in every year from 2020 to 2024, so its yield is production divided by an estimated area. Much of Uganda's coffee is grown by smallholders among bananas and food crops, which makes "area" itself hard to define. The direction of the gap is clear (Vietnam's intensive, irrigated, fertilised farms are in a different league), but not its size. A measured yield survey is the single most valuable missing number in Uganda's coffee data.</span></div>
+</section>
+
+<section class="f" id="price">
+  <div class="f-head">
+    <div class="f-num">04 · Price</div>
+    <h2>Paid more than its robusta peers, less than India and Indonesia</h2>
+    <p id="price-p">Each country's average export price (FAOSTAT value ÷ quantity, 2020–2024) as a share of what its mix of robusta and arabica would fetch at world reference prices. 100% means it is paid exactly the benchmark for what it grows.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Price realisation: export price ÷ world reference for the country's mix</div><div class="panel-sub">Hover for the prices behind each figure</div></div>
+    </div>
+    <div class="chart" id="c-price"></div>
+  </div>
+  <div class="note"><span class="k">Reading</span><span>Producers above 100% tend to sell washed, specialty or certified coffee; those well below it sell lower grades or face high marketing costs. Export unit values average across all grades and buyers, so they measure what a country is paid overall, not quality directly.</span></div>
+</section>
+
+<section class="f" id="stability">
+  <div class="f-head">
+    <div class="f-num">05 · Stability and home market</div>
+    <h2>Middle of the pack on stability; almost no home market</h2>
+    <p>The typical year-to-year swing in production (USDA, 2000–2025) and the share of each country's production that it drinks itself.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Production swing (%) against coffee consumed at home (%)</div><div class="panel-sub">Lower-left: stable and export-dependent · hover for values</div></div>
+      <div class="legend"><span><i class="sw" style="background:var(--rob);border-radius:50%"></i>Robusta-led</span><span><i class="sw" style="background:var(--ara);border-radius:50%"></i>Arabica-led</span><span><i class="sw" style="background:var(--mix);border-radius:50%"></i>Mixed</span></div>
+    </div>
+    <div class="chart" id="c-stab"></div>
+  </div>
+  <div class="note"><span class="k">Reading</span><span>Ethiopia, Brazil and Indonesia drink 35–45% of their own coffee, which absorbs surpluses and supports local roasting and jobs. Uganda drinks about 4%, so almost every bag depends on export markets. China drinks about three times what it grows and imports the rest, so it sits off this chart; Mexico drinks about 80% of its own.</span></div>
+</section>
+
+<section class="f" id="gap">
+  <div class="f-head">
+    <div class="f-num">06 · The data gap</div>
+    <h2>Three sources, three numbers</h2>
+    <p>Uganda's coffee exports as reported by the Coffee Department (financial year, July–June), USDA (market year, October–September) and FAOSTAT (calendar year), in million 60-kg bags.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-top">
+      <div><div class="panel-title">Uganda's coffee exports by source, million bags</div><div class="panel-sub">Hover for the year</div></div>
+      <div class="legend"><span><i class="sw line" style="background:var(--ink)"></i>Coffee Department</span><span><i class="sw dash" style="border-top-color:var(--rob)"></i>USDA</span><span><i class="sw dash" style="border-top-color:var(--ara)"></i>FAOSTAT</span></div>
+    </div>
+    <div class="chart" id="c-gap"></div>
+  </div>
+  <div class="callout" id="gap-cards"></div>
+  <div class="note"><span class="k">Why it matters</span><span>USDA matched the Coffee Department almost exactly until 2021, then diverged. Possible reasons include coffee from neighbouring countries (eastern DR Congo, South Sudan) exported through Uganda, the treatment of stocks, and USDA building its estimates from production rather than customs records. On USDA figures, Uganda's growth since 2021 is much smaller than national figures show. This benchmark uses USDA for every country so all are measured alike.</span></div>
+</section>
+
+<section class="f" id="meaning">
+  <div class="f-head">
+    <div class="f-num">07 · What it means</div>
+    <h2>Where Uganda can close the gaps</h2>
+  </div>
+  <div class="who">
+    <div class="panel"><span class="tag wet"><i></i>Productivity</span><h3>Yield is the big lever</h3><ul>
+      <li><b>Even closing part of the yield gap with Vietnam would add more coffee than all of Uganda's recent planting.</b></li>
+      <li>India and Indonesia show robusta systems with modest yields can still earn more per kg.</li>
+      <li>First, measure it: Uganda's yield is the least reliable number in the comparison.</li></ul></div>
+    <div class="panel"><span class="tag wet"><i></i>Price</span><h3>Grade and process</h3><ul>
+      <li><b>Uganda already out-earns Vietnam and its African robusta peers per kg.</b></li>
+      <li>India and Indonesia earn more for their mix, partly through washed and specialty grades.</li>
+      <li>Uganda's arabica discount (earlier report) is the clearest place to gain.</li></ul></div>
+    <div class="panel"><span class="tag dry"><i></i>Resilience</span><h3>Markets at home and data</h3><ul>
+      <li><b>A domestic market of 4% leaves Uganda fully exposed to world prices.</b></li>
+      <li>Ethiopia and Brazil show what a home market can absorb.</li>
+      <li>Reconciling export statistics with USDA and FAOSTAT would make Uganda's growth story credible to buyers and lenders.</li></ul></div>
+  </div>
+  <div class="panel">
+    <div class="scroll"><table class="score conf-table" style="min-width:760px"><thead><tr><th>Finding</th><th>Evidence</th><th>Confidence</th></tr></thead><tbody>
+      <tr><td>6th-largest producer and exporter; Africa's largest exporter</td><td class="ev">USDA, 2021–2025 averages; same ranking on FAOSTAT</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Fastest growth among the ten largest producers</td><td class="ev">USDA five-year averages, 2006–10 to 2021–25; holds on export growth too</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Yield about a fifth of Vietnam's</td><td class="ev">FAOSTAT; Uganda's area imputed every year 2020–24</td><td><span class="conf low">Low</span></td></tr>
+      <tr><td>Paid 85% of the world reference for its mix</td><td class="ev">FAOSTAT export unit values against IMF prices, weighted by USDA's robusta share; unit values mix grades</td><td><span class="conf med">Medium</span></td></tr>
+      <tr><td>About 4% of production consumed at home</td><td class="ev">USDA domestic consumption against production</td><td><span class="conf high">High</span></td></tr>
+      <tr><td>Export figures differ by source by 22–25% since 2024</td><td class="ev">Coffee Department, USDA and FAOSTAT side by side</td><td><span class="conf high">High</span></td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="f" id="methods">
+  <div class="f-head"><div class="f-num">08 · Methods and limits</div><h2>How this was done</h2></div>
+  <div class="limits">
+    <div class="panel"><h3><span class="tag wet"><i></i>Method</span></h3><ul>
+      <li>Peers by rule: at least 1% of world production, or an African producer above 100,000 bags (USDA, 2021–2025)</li>
+      <li>Groups by USDA robusta share: 70% or more robusta-led, 30% or less arabica-led</li>
+      <li>Growth from five-year averages at each end; volatility as the standard deviation of yearly log changes, 2000–2025</li>
+      <li id="m-price">Price realisation: export unit value ÷ (robusta share × world robusta price + arabica share × world arabica price), 2020–2024</li></ul></div>
+    <div class="panel"><h3><span class="tag dry"><i></i>Limits</span></h3><ul>
+      <li>FAOSTAT area and yield are estimated or imputed for many African producers, Uganda included</li>
+      <li>Export unit values average across grades, destinations and coffee forms</li>
+      <li>USDA figures are estimates built from production, not customs records</li>
+      <li>The robusta/arabica split is USDA's; national figures differ slightly</li></ul></div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Sources.</b> USDA Foreign Agricultural Service, coffee production, supply and distribution. FAOSTAT green coffee production and trade. IMF world coffee prices, via FRED. Coffee Department, Ministry of Agriculture, Animal Industry and Fisheries.</p>
+  <p><b>Related.</b> <a href="coffee_report.html">How much of the coffee boom reached Uganda's farmers?</a> · <a href="https://tayeruta.github.io/uganda-food-prices/reports/food_prices_report.html">Rainfall shocks and food prices</a></p>
+  <p><b>Reproducibility.</b> Every number on this page comes from <span class="num">notebooks/03_global_benchmark.ipynb</span> and <span class="num">scripts/build_report_data.py</span>.</p>
+</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script id="report-data" type="application/json">{"peers":[{"country":"Brazil","set":"World","group":"Mixed","east_africa":false,"production":63100.0,"exports":41040.0,"prod_share":36.92,"exp_share":30.225,"prod_rank":1,"exp_rank":1,"robusta":35.468,"home":35.246,"growth":1.886,"exp_growth":1.984,"yield":1756.8,"yield_official":100.0,"yield_quality":"official","price":3.251,"reference":3.962,"realisation":82.054,"swing":20.098},{"country":"Vietnam","set":"World","group":"Robusta-led","east_africa":false,"production":29626.0,"exports":27090.0,"prod_share":17.334,"exp_share":19.951,"prod_rank":2,"exp_rank":2,"robusta":96.422,"home":13.502,"growth":3.197,"exp_growth":2.96,"yield":2894.68,"yield_official":100.0,"yield_quality":"official","price":2.163,"reference":2.644,"realisation":81.808,"swing":12.02},{"country":"Colombia","set":"World","group":"Arabica-led","east_africa":false,"production":12512.0,"exports":12186.4,"prod_share":7.321,"exp_share":8.975,"prod_rank":3,"exp_rank":3,"robusta":0.0,"home":17.374,"growth":1.51,"exp_growth":1.683,"yield":850.96,"yield_official":100.0,"yield_quality":"official","price":4.869,"reference":4.728,"realisation":102.968,"swing":13.074},{"country":"Indonesia","set":"World","group":"Robusta-led","east_africa":false,"production":10500.0,"exports":7348.4,"prod_share":6.144,"exp_share":5.412,"prod_rank":4,"exp_rank":4,"robusta":87.429,"home":45.674,"growth":0.985,"exp_growth":-0.402,"yield":614.28,"yield_official":100.0,"yield_quality":"official","price":2.995,"reference":2.838,"realisation":105.536,"swing":15.416},{"country":"Ethiopia","set":"World and Africa","group":"Arabica-led","east_africa":true,"production":9520.0,"exports":5753.2,"prod_share":5.57,"exp_share":4.237,"prod_rank":5,"exp_rank":7,"robusta":0.0,"home":39.483,"growth":3.694,"exp_growth":4.306,"yield":669.38,"yield_official":40.0,"yield_quality":"partly estimated","price":4.563,"reference":4.728,"realisation":96.504,"swing":8.732},{"country":"Uganda","set":"World and Africa","group":"Robusta-led","east_africa":true,"production":6562.0,"exports":6290.0,"prod_share":3.839,"exp_share":4.632,"prod_rank":6,"exp_rank":6,"robusta":84.365,"home":4.282,"growth":5.02,"exp_growth":5.163,"yield":556.52,"yield_official":0.0,"yield_quality":"estimated or imputed","price":2.465,"reference":2.905,"realisation":84.855,"swing":13.388},{"country":"India","set":"World","group":"Robusta-led","east_africa":false,"production":6123.2,"exports":6555.0,"prod_share":3.583,"exp_share":4.828,"prod_rank":7,"exp_rank":5,"robusta":73.145,"home":18.781,"growth":1.808,"exp_growth":3.331,"yield":742.22,"yield_official":100.0,"yield_quality":"official","price":3.01,"reference":3.147,"realisation":95.628,"swing":6.295},{"country":"Honduras","set":"World","group":"Arabica-led","east_africa":false,"production":5256.0,"exports":4933.6,"prod_share":3.075,"exp_share":3.633,"prod_rank":8,"exp_rank":8,"robusta":0.0,"home":6.83,"growth":2.611,"exp_growth":2.529,"yield":1178.02,"yield_official":0.0,"yield_quality":"estimated or imputed","price":3.87,"reference":4.728,"realisation":81.851,"swing":17.901},{"country":"Peru","set":"World","group":"Arabica-led","east_africa":false,"production":4094.2,"exports":3969.4,"prod_share":2.396,"exp_share":2.923,"prod_rank":9,"exp_rank":9,"robusta":0.0,"home":6.639,"growth":0.641,"exp_growth":0.759,"yield":845.38,"yield_official":100.0,"yield_quality":"official","price":4.16,"reference":4.728,"realisation":87.974,"swing":24.507},{"country":"Mexico","set":"World","group":"Arabica-led","east_africa":false,"production":3829.8,"exports":3022.2,"prod_share":2.241,"exp_share":2.226,"prod_rank":10,"exp_rank":11,"robusta":12.664,"home":79.613,"growth":-0.784,"exp_growth":0.88,"yield":286.24,"yield_official":100.0,"yield_quality":"official","price":4.624,"reference":4.455,"realisation":103.791,"swing":13.448},{"country":"Guatemala","set":"World","group":"Arabica-led","east_africa":false,"production":3340.8,"exports":3109.0,"prod_share":1.955,"exp_share":2.29,"prod_rank":11,"exp_rank":10,"robusta":3.831,"home":22.025,"growth":-1.23,"exp_growth":-1.441,"yield":654.74,"yield_official":60.0,"yield_quality":"partly estimated","price":4.641,"reference":4.646,"realisation":99.897,"swing":8.399},{"country":"Nicaragua","set":"World","group":"Arabica-led","east_africa":false,"production":2599.0,"exports":2445.4,"prod_share":1.521,"exp_share":1.801,"prod_rank":12,"exp_rank":13,"robusta":5.848,"home":6.156,"growth":2.899,"exp_growth":2.732,"yield":1022.5,"yield_official":100.0,"yield_quality":"official","price":3.799,"reference":4.602,"realisation":82.561,"swing":21.951},{"country":"China","set":"World","group":"Arabica-led","east_africa":false,"production":1840.0,"exports":1190.0,"prod_share":1.077,"exp_share":0.876,"prod_rank":13,"exp_rank":15,"robusta":0.0,"home":307.37,"growth":6.828,"exp_growth":3.722,"yield":3419.44,"yield_official":0.0,"yield_quality":"estimated or imputed","price":3.762,"reference":4.728,"realisation":79.561,"swing":20.739},{"country":"Tanzania","set":"Africa","group":"Mixed","east_africa":true,"production":1310.0,"exports":1261.4,"prod_share":0.766,"exp_share":0.929,"prod_rank":15,"exp_rank":14,"robusta":46.565,"home":5.405,"growth":2.603,"exp_growth":2.134,"yield":250.64,"yield_official":0.0,"yield_quality":"estimated or imputed","price":2.752,"reference":3.722,"realisation":73.95,"swing":36.733},{"country":"C\u00f4te d'Ivoire","set":"Africa","group":"Robusta-led","east_africa":false,"production":1081.0,"exports":1030.0,"prod_share":0.632,"exp_share":0.759,"prod_rank":17,"exp_rank":17,"robusta":100.0,"home":4.718,"growth":-4.237,"exp_growth":-3.338,"yield":139.82,"yield_official":0.0,"yield_quality":"estimated or imputed","price":1.752,"reference":2.567,"realisation":68.27,"swing":36.024},{"country":"Kenya","set":"Africa","group":"Arabica-led","east_africa":true,"production":847.0,"exports":857.8,"prod_share":0.496,"exp_share":0.632,"prod_rank":18,"exp_rank":18,"robusta":0.0,"home":6.375,"growth":0.158,"exp_growth":0.366,"yield":394.5,"yield_official":100.0,"yield_quality":"official","price":5.563,"reference":4.728,"realisation":117.654,"swing":13.56},{"country":"Rwanda","set":"Africa","group":"Arabica-led","east_africa":true,"production":312.0,"exports":312.0,"prod_share":0.183,"exp_share":0.23,"prod_rank":26,"exp_rank":24,"robusta":0.0,"home":0.0,"growth":0.143,"exp_growth":0.143,"yield":1019.18,"yield_official":60.0,"yield_quality":"partly estimated","price":4.632,"reference":4.728,"realisation":97.97,"swing":24.863},{"country":"Madagascar","set":"Africa","group":"Robusta-led","east_africa":false,"production":305.0,"exports":50.2,"prod_share":0.178,"exp_share":0.037,"prod_rank":27,"exp_rank":30,"robusta":91.803,"home":83.541,"growth":-3.718,"exp_growth":-5.901,"yield":558.66,"yield_official":0.0,"yield_quality":"estimated or imputed","price":2.081,"reference":2.744,"realisation":75.849,"swing":33.633},{"country":"Cameroon","set":"Africa","group":"Robusta-led","east_africa":false,"production":238.0,"exports":169.0,"prod_share":0.139,"exp_share":0.124,"prod_rank":28,"exp_rank":25,"robusta":87.395,"home":29.832,"growth":-6.913,"exp_growth":-8.437,"yield":529.96,"yield_official":20.0,"yield_quality":"partly estimated","price":1.931,"reference":2.839,"realisation":68.006,"swing":19.287},{"country":"DR Congo","set":"Africa","group":"Robusta-led","east_africa":false,"production":216.0,"exports":102.0,"prod_share":0.126,"exp_share":0.075,"prod_rank":29,"exp_rank":28,"robusta":70.37,"home":52.778,"growth":-2.012,"exp_growth":0.377,"yield":394.76,"yield_official":0.0,"yield_quality":"estimated or imputed","price":2.18,"reference":3.207,"realisation":67.969,"swing":12.631},{"country":"Guinea","set":"Africa","group":"Robusta-led","east_africa":false,"production":172.0,"exports":153.4,"prod_share":0.101,"exp_share":0.113,"prod_rank":30,"exp_rank":26,"robusta":100.0,"home":10.814,"growth":-4.875,"exp_growth":-5.055,"yield":404.58,"yield_official":0.0,"yield_quality":"estimated or imputed","price":1.743,"reference":2.567,"realisation":67.893,"swing":70.338},{"country":"Burundi","set":"Africa","group":"Arabica-led","east_africa":true,"production":147.0,"exports":132.0,"prod_share":0.086,"exp_share":0.097,"prod_rank":31,"exp_rank":27,"robusta":0.0,"home":10.204,"growth":-3.636,"exp_growth":-4.492,"yield":931.56,"yield_official":0.0,"yield_quality":"estimated or imputed","price":3.567,"reference":4.728,"realisation":75.431,"swing":25.078}],"gap":[{"y":2010,"cd":3.1494,"usda":3.15,"fao":2.5286},{"y":2011,"cd":2.7262,"usda":3.0,"fao":3.0962},{"y":2012,"cd":3.5826,"usda":3.575,"fao":2.8173},{"y":2013,"cd":3.4998,"usda":3.6,"fao":3.8375},{"y":2014,"cd":3.4559,"usda":3.35,"fao":3.5256},{"y":2015,"cd":3.3156,"usda":3.3,"fao":3.6556},{"y":2016,"cd":4.6052,"usda":4.6,"fao":3.5097},{"y":2017,"cd":4.3056,"usda":4.3,"fao":4.7833},{"y":2018,"cd":4.44,"usda":4.45,"fao":4.2028},{"y":2019,"cd":5.36,"usda":5.35,"fao":4.6139},{"y":2020,"cd":6.4989,"usda":6.514,"fao":5.4895},{"y":2021,"cd":5.859,"usda":5.85,"fao":6.7515},{"y":2022,"cd":5.7615,"usda":6.25,"fao":6.1691},{"y":2023,"cd":6.1208,"usda":6.3,"fao":6.1467},{"y":2024,"cd":7.7531,"usda":6.35,"fao":6.4335},{"y":2025,"cd":8.3724,"usda":6.7,"fao":null}],"lines":{"Brazil":[{"y":1990,"v":31.0},{"y":1991,"v":28.5},{"y":1992,"v":24.0},{"y":1993,"v":28.5},{"y":1994,"v":28.0},{"y":1995,"v":16.8},{"y":1996,"v":28.0},{"y":1997,"v":23.5},{"y":1998,"v":35.6},{"y":1999,"v":30.8},{"y":2000,"v":34.1},{"y":2001,"v":35.1},{"y":2002,"v":53.6},{"y":2003,"v":33.2},{"y":2004,"v":43.6},{"y":2005,"v":36.1},{"y":2006,"v":46.7},{"y":2007,"v":39.1},{"y":2008,"v":53.3},{"y":2009,"v":44.8},{"y":2010,"v":54.5},{"y":2011,"v":49.2},{"y":2012,"v":57.6},{"y":2013,"v":57.2},{"y":2014,"v":54.3},{"y":2015,"v":49.4},{"y":2016,"v":56.1},{"y":2017,"v":52.1},{"y":2018,"v":66.5},{"y":2019,"v":60.5},{"y":2020,"v":69.9},{"y":2021,"v":58.1},{"y":2022,"v":62.6},{"y":2023,"v":66.3},{"y":2024,"v":65.5},{"y":2025,"v":63.0}],"Vietnam":[{"y":1990,"v":1.2},{"y":1991,"v":1.98},{"y":1992,"v":2.25},{"y":1993,"v":2.5},{"y":1994,"v":3.5},{"y":1995,"v":3.917},{"y":1996,"v":5.75},{"y":1997,"v":7.0},{"y":1998,"v":7.5},{"y":1999,"v":11.01},{"y":2000,"v":15.333},{"y":2001,"v":12.833},{"y":2002,"v":11.167},{"y":2003,"v":15.0},{"y":2004,"v":14.5},{"y":2005,"v":16.335},{"y":2006,"v":19.5},{"y":2007,"v":18.0},{"y":2008,"v":16.98},{"y":2009,"v":18.5},{"y":2010,"v":19.415},{"y":2011,"v":26.0},{"y":2012,"v":26.5},{"y":2013,"v":29.833},{"y":2014,"v":27.4},{"y":2015,"v":28.93},{"y":2016,"v":26.7},{"y":2017,"v":29.3},{"y":2018,"v":30.4},{"y":2019,"v":31.3},{"y":2020,"v":29.0},{"y":2021,"v":31.58},{"y":2022,"v":28.3},{"y":2023,"v":27.55},{"y":2024,"v":29.0},{"y":2025,"v":31.7}],"Colombia":[{"y":1990,"v":14.5},{"y":1991,"v":17.98},{"y":1992,"v":14.95},{"y":1993,"v":11.4},{"y":1994,"v":13.0},{"y":1995,"v":12.939},{"y":1996,"v":10.779},{"y":1997,"v":12.043},{"y":1998,"v":10.868},{"y":1999,"v":9.512},{"y":2000,"v":10.5},{"y":2001,"v":11.95},{"y":2002,"v":11.712},{"y":2003,"v":11.053},{"y":2004,"v":11.532},{"y":2005,"v":11.953},{"y":2006,"v":12.164},{"y":2007,"v":12.515},{"y":2008,"v":8.664},{"y":2009,"v":8.1},{"y":2010,"v":8.525},{"y":2011,"v":7.655},{"y":2012,"v":9.927},{"y":2013,"v":12.075},{"y":2014,"v":13.3},{"y":2015,"v":14.0},{"y":2016,"v":14.6},{"y":2017,"v":13.825},{"y":2018,"v":13.87},{"y":2019,"v":14.1},{"y":2020,"v":13.4},{"y":2021,"v":11.8},{"y":2022,"v":10.7},{"y":2023,"v":12.76},{"y":2024,"v":14.8},{"y":2025,"v":12.5}],"Indonesia":[{"y":1990,"v":7.48},{"y":1991,"v":7.1},{"y":1992,"v":7.35},{"y":1993,"v":7.4},{"y":1994,"v":6.4},{"y":1995,"v":5.8},{"y":1996,"v":7.9},{"y":1997,"v":7.0},{"y":1998,"v":6.95},{"y":1999,"v":6.66},{"y":2000,"v":6.495},{"y":2001,"v":6.16},{"y":2002,"v":6.8},{"y":2003,"v":7.25},{"y":2004,"v":8.45},{"y":2005,"v":9.45},{"y":2006,"v":7.5},{"y":2007,"v":8.0},{"y":2008,"v":10.0},{"y":2009,"v":10.5},{"y":2010,"v":9.325},{"y":2011,"v":7.97},{"y":2012,"v":11.9},{"y":2013,"v":11.9},{"y":2014,"v":10.47},{"y":2015,"v":12.1},{"y":2016,"v":10.6},{"y":2017,"v":10.4},{"y":2018,"v":10.6},{"y":2019,"v":10.7},{"y":2020,"v":10.7},{"y":2021,"v":10.58},{"y":2022,"v":10.7},{"y":2023,"v":8.15},{"y":2024,"v":10.7},{"y":2025,"v":12.37}],"Ethiopia":[{"y":1990,"v":3.5},{"y":1991,"v":3.0},{"y":1992,"v":3.5},{"y":1993,"v":3.7},{"y":1994,"v":3.8},{"y":1995,"v":3.8},{"y":1996,"v":3.8},{"y":1997,"v":3.833},{"y":1998,"v":3.867},{"y":1999,"v":3.505},{"y":2000,"v":2.768},{"y":2001,"v":3.756},{"y":2002,"v":3.693},{"y":2003,"v":3.875},{"y":2004,"v":4.068},{"y":2005,"v":4.5},{"y":2006,"v":5.0},{"y":2007,"v":5.0},{"y":2008,"v":5.5},{"y":2009,"v":6.0},{"y":2010,"v":6.125},{"y":2011,"v":6.32},{"y":2012,"v":6.5},{"y":2013,"v":6.345},{"y":2014,"v":6.475},{"y":2015,"v":6.51},{"y":2016,"v":6.943},{"y":2017,"v":7.055},{"y":2018,"v":7.35},{"y":2019,"v":7.475},{"y":2020,"v":7.6},{"y":2021,"v":8.15},{"y":2022,"v":7.3},{"y":2023,"v":9.13},{"y":2024,"v":11.46},{"y":2025,"v":11.56}],"Uganda":[{"y":1990,"v":2.7},{"y":1991,"v":2.9},{"y":1992,"v":2.8},{"y":1993,"v":2.7},{"y":1994,"v":3.1},{"y":1995,"v":4.2},{"y":1996,"v":4.297},{"y":1997,"v":3.032},{"y":1998,"v":3.64},{"y":1999,"v":3.708},{"y":2000,"v":3.097},{"y":2001,"v":3.265},{"y":2002,"v":2.756},{"y":2003,"v":2.745},{"y":2004,"v":2.694},{"y":2005,"v":2.175},{"y":2006,"v":2.905},{"y":2007,"v":3.49},{"y":2008,"v":3.26},{"y":2009,"v":2.87},{"y":2010,"v":3.212},{"y":2011,"v":3.075},{"y":2012,"v":3.6},{"y":2013,"v":3.85},{"y":2014,"v":3.5},{"y":2015,"v":3.55},{"y":2016,"v":4.875},{"y":2017,"v":4.6},{"y":2018,"v":4.65},{"y":2019,"v":5.475},{"y":2020,"v":6.63},{"y":2021,"v":6.05},{"y":2022,"v":6.565},{"y":2023,"v":6.4},{"y":2024,"v":6.7},{"y":2025,"v":7.095}],"India":[{"y":1990,"v":2.97},{"y":1991,"v":3.2},{"y":1992,"v":2.7},{"y":1993,"v":3.465},{"y":1994,"v":3.06},{"y":1995,"v":3.717},{"y":1996,"v":3.417},{"y":1997,"v":3.805},{"y":1998,"v":4.415},{"y":1999,"v":4.87},{"y":2000,"v":5.02},{"y":2001,"v":5.01},{"y":2002,"v":4.588},{"y":2003,"v":4.508},{"y":2004,"v":4.595},{"y":2005,"v":4.57},{"y":2006,"v":4.8},{"y":2007,"v":4.365},{"y":2008,"v":4.375},{"y":2009,"v":4.825},{"y":2010,"v":5.035},{"y":2011,"v":5.23},{"y":2012,"v":5.303},{"y":2013,"v":5.075},{"y":2014,"v":5.44},{"y":2015,"v":5.8},{"y":2016,"v":5.2},{"y":2017,"v":5.266},{"y":2018,"v":5.325},{"y":2019,"v":4.967},{"y":2020,"v":5.567},{"y":2021,"v":5.7},{"y":2022,"v":5.867},{"y":2023,"v":6.56},{"y":2024,"v":6.059},{"y":2025,"v":6.43}]},"ref_robusta":2.5666,"ref_arabica":4.7285}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('report-data').textContent);
+const fmt0 = d3.format(',.0f'), fmt1 = d3.format('.1f'), fmt2 = d3.format('.2f');
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const GC = g => css(g === 'Robusta-led' ? '--rob' : g === 'Arabica-led' ? '--ara' : '--mix');
+const tip = document.getElementById('tip');
+function showTip(html, ev){
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect(), pad = 14;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+const hideTip = () => { tip.style.opacity = 0; };
+const row = (k, v, c) => `<div class="row"><span>${c ? `<i class="dot" style="background:${c}"></i>` : ''}${k}</span><b>${v}</b></div>`;
+function frame(el, h, m){
+  if (typeof el === 'string') el = document.getElementById(el);
+  el.innerHTML = '';
+  const W = Math.max(260, el.clientWidth);
+  const svg = d3.select(el).append('svg').attr('width', W).attr('height', h).attr('viewBox', `0 0 ${W} ${h}`);
+  const g = svg.append('g').attr('transform', `translate(${m.l},${m.t})`);
+  return {el, svg, g, w: W - m.l - m.r, h: h - m.t - m.b};
+}
+const P = D.peers, UG = P.find(p => p.country === 'Uganda');
+const isUg = p => p.country === 'Uganda';
+
+function fill(){
+  document.getElementById('k-rank').textContent = UG.prod_rank === UG.exp_rank ? `${UG.prod_rank}th` : `${UG.prod_rank}th / ${UG.exp_rank}th`;
+  document.getElementById('k-growth').innerHTML = fmt1(UG.growth) + '<small>% a year</small>';
+  document.getElementById('k-price').innerHTML = Math.round(UG.realisation) + '<small>%</small>';
+  const vn = P.find(p => p.country === 'Vietnam');
+  document.querySelector('#k-price + .l').textContent = `Export price as a share of the world reference for its coffee mix; Vietnam ${Math.round(vn.realisation)}%`;
+  document.getElementById('price-p').textContent += ` World references, 2020–24: robusta US$${fmt2(D.ref_robusta)}/kg, arabica US$${fmt2(D.ref_arabica)}/kg.`;
+}
+
+/* 01 peers table */
+let setKey = 'all';
+function peersTable(){
+  const keep = p => setKey === 'all' || (setKey === 'ea' && p.east_africa) || (setKey === 'africa' && p.set !== 'World') || (setKey === 'world' && p.set !== 'Africa');
+  document.querySelector('#t-peers tbody').innerHTML = P.filter(keep).map(p => `<tr class="${isUg(p) ? 'ug' : ''}"><td class="reg">${p.country}</td>
+    <td><span class="grp"><i style="background:${GC(p.group)}"></i>${p.group}</span></td>
+    <td class="r num">${fmt0(p.production)}</td><td class="r num">${fmt0(p.exports)}</td>
+    <td class="r num">${fmt1(p.exp_share)}%</td><td class="r num">${p.exp_rank}</td><td class="r num">${Math.round(p.home)}%</td></tr>`).join('');
+}
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+  setKey = b.dataset.k; document.querySelectorAll('.tabs button').forEach(o => o.setAttribute('aria-pressed', o === b)); peersTable();
+}));
+
+/* generic ranked dot plot */
+function dotPlot(id, items, val, fmt, dom, opts){
+  const isS = innerWidth < 600, rows = items.slice().sort((a, b) => val(b) - val(a));
+  const f = frame(id, 24 * rows.length + 40, {t:6, r:54, b:28, l: isS ? 104 : 130});
+  const y = d3.scaleBand().domain(rows.map(r => r.country)).range([0, f.h]).padding(.3);
+  const x = d3.scaleLinear().domain(dom).range([0, f.w]);
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(isS ? 4 : 7).tickSize(-f.h).tickFormat(opts.tick || fmt))
+    .call(a => a.selectAll('.tick line').attr('stroke', d => d === (opts.ref ?? 0) ? css('--ink-2') : css('--grid'))).call(a => a.selectAll('.tick text').attr('dy','1.1em'));
+  rows.forEach(r => {
+    const cy = y(r.country) + y.bandwidth()/2, v = val(r);
+    f.g.append('text').attr('x', -10).attr('y', cy + 4).attr('text-anchor','end').style('font-size','12px').style('fill', css('--ink')).style('font-weight', isUg(r) ? 700 : 400).text(r.country);
+    f.g.append('line').attr('x1', x(opts.ref ?? 0)).attr('x2', x(v)).attr('y1', cy).attr('y2', cy).attr('stroke', css('--rule')).attr('stroke-width', 2);
+    f.g.append('circle').attr('cx', x(v)).attr('cy', cy).attr('r', isUg(r) ? 7 : 5.5).attr('fill', GC(r.group)).attr('stroke', isUg(r) ? css('--ink') : css('--panel')).attr('stroke-width', isUg(r) ? 2 : 1.5)
+      .on('pointermove', ev => showTip(opts.tip(r), ev)).on('pointerleave', hideTip);
+    f.g.append('text').attr('class', isUg(r) ? 'ann-strong' : 'ann').attr('x', x(Math.max(v, opts.ref ?? 0)) + 9).attr('y', cy + 4).text(fmt(v));
+  });
+}
+
+/* 02 growth */
+function growth(){
+  dotPlot('c-growth', P, p => p.growth, d => d3.format('+.1f')(d) + '%', [-8, 8], {tick: d => d3.format('+d')(d) + '%',
+    tip: p => `<div class="t">${p.country}</div>${row('Production growth', d3.format('+.1f')(p.growth) + '% a year', GC(p.group))}${row('Export growth', d3.format('+.1f')(p.exp_growth) + '% a year')}${row('Production 2021–25', fmt0(p.production) + 'k bags')}`});
+  const L = D.lines, isS = innerWidth < 600;
+  const f = frame('c-lines', isS ? 260 : 320, {t:12, r: isS ? 12 : 80, b:28, l:40});
+  const x = d3.scaleLinear().domain([1990, 2025]).range([0, f.w]);
+  const y = d3.scaleLog().domain([0.5, 80]).range([f.h, 0]);
+  f.g.append('g').call(d3.axisLeft(y).tickValues([0.5, 1, 2, 5, 10, 20, 50]).tickSize(-f.w).tickFormat(d => d < 1 ? '0.5' : d3.format('d')(d))).call(a => a.selectAll('.tick line').attr('stroke', css('--grid'))).call(a => a.selectAll('.tick text').attr('x', -6));
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(isS ? 4 : 7).tickFormat(d3.format('d')).tickSize(4)).call(a => a.selectAll('.tick line').attr('stroke', css('--rule')));
+  const ends = [];
+  Object.entries(L).forEach(([c, s]) => {
+    const pts = s.filter(d => d.y >= 1990).map(d => ({y: d.y, v: d.v}));
+    const ug = c === 'Uganda';
+    f.g.append('path').attr('d', d3.line().x(d => x(d.y)).y(d => y(d.v))(pts)).attr('fill','none').attr('stroke', ug ? css('--ink') : css('--muted')).attr('stroke-width', ug ? 2.8 : 1.4).attr('opacity', ug ? 1 : .7);
+    const l = pts[pts.length - 1]; ends.push({c, yy: y(l.v), ug});
+    f.g.selectAll(null).data(pts).join('circle').attr('cx', d => x(d.y)).attr('cy', d => y(d.v)).attr('r', 5).attr('fill','transparent')
+      .on('pointermove', (ev, d) => showTip(`<div class="t">${c} · ${d.y}</div>${row('Production', fmt1(d.v) + 'm bags')}`, ev)).on('pointerleave', hideTip);
+  });
+  ends.sort((a, b) => a.yy - b.yy).forEach((e, i, arr) => { if (i > 0 && e.yy - arr[i - 1].yy < 13) e.yy = arr[i - 1].yy + 13; });
+  if (!isS) ends.forEach(e => f.g.append('text').attr('class', e.ug ? 'ann-strong' : 'ann').attr('x', f.w + 6).attr('y', e.yy + 4).text(e.c));
+}
+
+/* 03 yield bars by group */
+function yieldChart(){
+  const isS = innerWidth < 600, groups = ['Robusta-led', 'Arabica-led', 'Mixed'];
+  const rows = groups.flatMap(g => P.filter(p => p.group === g && p.yield != null).sort((a, b) => b.yield - a.yield).map(p => ({...p, g})));
+  const f = frame('c-yield', 22 * rows.length + 3 * 26 + 40, {t:6, r:60, b:28, l: isS ? 104 : 130});
+  const x = d3.scaleLinear().domain([0, 3600]).range([0, f.w]);
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(isS ? 4 : 7).tickSize(-f.h).tickFormat(d3.format(',d'))).call(a => a.selectAll('.tick line').attr('stroke', css('--grid'))).call(a => a.selectAll('.tick text').attr('dy','1.1em'));
+  let yy = 0;
+  groups.forEach(g => {
+    const rs = rows.filter(r => r.g === g); if (!rs.length) return;
+    f.g.append('text').attr('x', -10).attr('y', yy + 14).attr('text-anchor','end').style('font-size','11px').style('font-weight', 500).style('letter-spacing','.08em').style('fill', GC(g)).text(g.toUpperCase());
+    yy += 22;
+    rs.forEach(r => {
+      const off = r.yield_official === 100;
+      f.g.append('rect').attr('x', 0).attr('y', yy + 3).attr('width', x(r.yield)).attr('height', 14).attr('rx', 3).attr('fill', GC(g)).attr('opacity', off ? 1 : .3)
+        .attr('stroke', isUg(r) ? css('--ink') : 'none').attr('stroke-width', 2)
+        .on('pointermove', ev => showTip(`<div class="t">${r.country}</div>${row('Yield', fmt0(r.yield) + ' kg/ha', GC(g))}${row('Area figures', r.yield_quality)}`, ev)).on('pointerleave', hideTip);
+      f.g.append('text').attr('x', -10).attr('y', yy + 14).attr('text-anchor','end').style('font-size','12px').style('fill', css('--ink')).style('font-weight', isUg(r) ? 700 : 400).text(r.country);
+      f.g.append('text').attr('class', isUg(r) ? 'ann-strong' : 'ann').attr('x', x(r.yield) + 6).attr('y', yy + 14).text(fmt0(r.yield) + (off ? '' : ' *'));
+      yy += 22;
+    });
+    yy += 4;
+  });
+}
+
+/* 04 price realisation */
+function priceChart(){
+  dotPlot('c-price', P.filter(p => p.realisation != null), p => p.realisation, d => Math.round(d) + '%', [60, 125], {ref: 100, tick: d => d + '%',
+    tip: p => `<div class="t">${p.country} · ${p.group}</div>${row('Export price', 'US$' + fmt2(p.price) + '/kg', GC(p.group))}${row('Reference for its mix', 'US$' + fmt2(p.reference) + '/kg')}${row('Realisation', Math.round(p.realisation) + '%')}${row('Robusta share', Math.round(p.robusta) + '%')}`});
+}
+
+/* 05 stability scatter */
+function stabChart(){
+  const isS = innerWidth < 600, rows = P.filter(p => p.home <= 100);
+  const f = frame('c-stab', isS ? 300 : 360, {t:12, r:16, b:40, l:48});
+  const x = d3.scaleLinear().domain([0, 90]).range([0, f.w]);
+  const y = d3.scaleLinear().domain([0, 50]).range([f.h, 0]);
+  f.g.append('g').call(d3.axisLeft(y).ticks(6).tickSize(-f.w).tickFormat(d => d + '%')).call(a => a.selectAll('.tick line').attr('stroke', css('--grid'))).call(a => a.selectAll('.tick text').attr('x', -6));
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(6).tickSize(4).tickFormat(d => d + '%')).call(a => a.selectAll('.tick line').attr('stroke', css('--rule')));
+  f.g.append('text').attr('x', f.w).attr('y', f.h + 34).attr('text-anchor','end').style('font-size','12px').text('Share consumed at home →');
+  f.g.append('text').attr('x', 4).attr('y', -2).style('font-size','12px').text('↑ Typical year-to-year production swing');
+  const off = {Uganda: isS ? [10, 22, 'start'] : [0, 24, 'middle'], Vietnam: [0, 22, 'middle'], India: [9, 4], Brazil: [9, 4], Indonesia: [9, 4], Ethiopia: [9, 4], Madagascar: [-9, 4, 'end'], "Côte d'Ivoire": [9, 4], Guinea: [9, 4]};
+  rows.forEach(p => {
+    const sw = Math.min(p.swing, 44), top = p.swing > 44;
+    f.g.append('circle').attr('cx', x(p.home)).attr('cy', y(sw)).attr('r', isUg(p) ? 7.5 : 5.5).attr('fill', GC(p.group)).attr('stroke', isUg(p) ? css('--ink') : css('--panel')).attr('stroke-width', isUg(p) ? 2 : 1.5)
+      .on('pointermove', ev => showTip(`<div class="t">${p.country}</div>${row('Production swing', Math.round(p.swing) + '% a year', GC(p.group))}${row('Consumed at home', Math.round(p.home) + '%')}`, ev)).on('pointerleave', hideTip);
+    const o = off[p.country];
+    if (o && !(isS && !isUg(p) && !top))
+      f.g.append('text').attr('class', isUg(p) ? 'ann-strong' : 'ann').attr('x', x(p.home) + o[0]).attr('y', y(sw) + o[1]).attr('text-anchor', o[2] || 'start')
+        .text(top ? `${p.country} ↑ ${Math.round(p.swing)}%, off scale` : p.country);
+  });
+}
+
+/* 06 data gap */
+function gapChart(){
+  const G = D.gap.filter(d => d.y >= 2010), isS = innerWidth < 600;
+  const f = frame('c-gap', isS ? 240 : 290, {t:12, r:16, b:28, l:36});
+  const x = d3.scaleLinear().domain([2010, 2025]).range([0, f.w]);
+  const y = d3.scaleLinear().domain([2, 9]).range([f.h, 0]);
+  f.g.append('g').call(d3.axisLeft(y).ticks(7).tickSize(-f.w)).call(a => a.selectAll('.tick line').attr('stroke', css('--grid'))).call(a => a.selectAll('.tick text').attr('x', -6));
+  f.g.append('g').attr('transform', `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(isS ? 4 : 8).tickFormat(d3.format('d')).tickSize(4)).call(a => a.selectAll('.tick line').attr('stroke', css('--rule')));
+  [['cd', '--ink', null, 2.6], ['usda', '--rob', '6 4', 2], ['fao', '--ara', '2 4', 2]].forEach(([k, c, dash, sw]) => {
+    const pts = G.filter(d => d[k] != null);
+    f.g.append('path').attr('d', d3.line().x(d => x(d.y)).y(d => y(d[k]))(pts)).attr('fill','none').attr('stroke', css(c)).attr('stroke-width', sw).attr('stroke-dasharray', dash).attr('stroke-linecap','round');
+    f.g.selectAll(null).data(pts).join('circle').attr('cx', d => x(d.y)).attr('cy', d => y(d[k])).attr('r', 3).attr('fill', css(c));
+  });
+  const cross = f.g.append('line').attr('y1', 0).attr('y2', f.h).attr('stroke', css('--ink-2')).attr('opacity', 0);
+  f.g.append('rect').attr('width', f.w).attr('height', f.h).attr('fill','transparent')
+    .on('pointermove', ev => { const yr = Math.round(x.invert(d3.pointer(ev)[0])), d = G.find(e => e.y === yr); if (!d) return;
+      cross.attr('x1', x(yr)).attr('x2', x(yr)).attr('opacity', .45);
+      showTip(`<div class="t">${yr}</div>${row('Coffee Department', d.cd ? fmt2(d.cd) + 'm' : '–', css('--ink'))}${row('USDA', d.usda ? fmt2(d.usda) + 'm' : '–', css('--rob'))}${row('FAOSTAT', d.fao ? fmt2(d.fao) + 'm' : '–', css('--ara'))}`, ev); })
+    .on('pointerleave', () => { hideTip(); cross.attr('opacity', 0); });
+  const last = G[G.length - 1], prev = G.find(d => d.y === last.y - 1);
+  const cards = [[`${prev.y}/${String(prev.y + 1).slice(-2)}`, `${Math.round(100 * (prev.cd / prev.usda - 1))}%`, `Coffee Department (${fmt2(prev.cd)}m bags) above USDA (${fmt2(prev.usda)}m). FAOSTAT's calendar ${prev.y}: ${fmt2(prev.fao)}m.`],
+                 [`${last.y}/${String(last.y + 1).slice(-2)}`, `${Math.round(100 * (last.cd / last.usda - 1))}%`, `Coffee Department (${fmt2(last.cd)}m bags) above USDA (${fmt2(last.usda)}m). FAOSTAT has no ${last.y} figure yet.`],
+                 ['Until 2021', '≈ 0%', 'USDA matched the Coffee Department almost exactly; FAOSTAT differed in single years mainly because it counts calendar years.']];
+  document.getElementById('gap-cards').innerHTML = cards.map(([t, v, p]) => `<div class="panel"><span class="tag wet"><i></i>${t}</span><div class="big num">${v}</div><p>${p}</p></div>`).join('');
+}
+
+function drawAll(){ growth(); yieldChart(); priceChart(); stabChart(); gapChart(); }
+fill(); peersTable(); drawAll();
+let raf; const redraw = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(drawAll); };
+let lastW = innerWidth; addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; redraw(); } });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
+new MutationObserver(redraw).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+})();
+</script>
+
+</body></html>

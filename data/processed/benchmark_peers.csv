@@ -1,0 +1,23 @@
+Country_Name,set,group,Production,Exports,world_production_share,world_export_share,production_rank,export_rank,robusta_share,consumed_at_home,"production growth, % a year","export growth, % a year","yield, kg/ha",area figures official (%),data quality,"export price, US$/kg","mix reference, US$/kg",price realisation (%),typical year-to-year production swing (%)
+Brazil,World,Mixed,63100.0,41040.0,36.92,30.225,1,1,35.468,35.246,1.886,1.984,1756.8,100.0,official,3.251,3.962,82.054,20.098
+Vietnam,World,Robusta-led,29626.0,27090.0,17.334,19.951,2,2,96.422,13.502,3.197,2.96,2894.68,100.0,official,2.163,2.644,81.808,12.02
+Colombia,World,Arabica-led,12512.0,12186.4,7.321,8.975,3,3,0.0,17.374,1.51,1.683,850.96,100.0,official,4.869,4.728,102.968,13.074
+Indonesia,World,Robusta-led,10500.0,7348.4,6.144,5.412,4,4,87.429,45.674,0.985,-0.402,614.28,100.0,official,2.995,2.838,105.536,15.416
+Ethiopia,World and Africa,Arabica-led,9520.0,5753.2,5.57,4.237,5,7,0.0,39.483,3.694,4.306,669.38,40.0,partly estimated,4.563,4.728,96.504,8.732
+Uganda,World and Africa,Robusta-led,6562.0,6290.0,3.839,4.632,6,6,84.365,4.282,5.02,5.163,556.52,0.0,estimated or imputed,2.465,2.905,84.855,13.388
+India,World,Robusta-led,6123.2,6555.0,3.583,4.828,7,5,73.145,18.781,1.808,3.331,742.22,100.0,official,3.01,3.147,95.628,6.295
+Honduras,World,Arabica-led,5256.0,4933.6,3.075,3.633,8,8,0.0,6.83,2.611,2.529,1178.02,0.0,estimated or imputed,3.87,4.728,81.851,17.901
+Peru,World,Arabica-led,4094.2,3969.4,2.396,2.923,9,9,0.0,6.639,0.641,0.759,845.38,100.0,official,4.16,4.728,87.974,24.507
+Mexico,World,Arabica-led,3829.8,3022.2,2.241,2.226,10,11,12.664,79.613,-0.784,0.88,286.24,100.0,official,4.624,4.455,103.791,13.448
+Guatemala,World,Arabica-led,3340.8,3109.0,1.955,2.29,11,10,3.831,22.025,-1.23,-1.441,654.74,60.0,partly estimated,4.641,4.646,99.897,8.399
+Nicaragua,World,Arabica-led,2599.0,2445.4,1.521,1.801,12,13,5.848,6.156,2.899,2.732,1022.5,100.0,official,3.799,4.602,82.561,21.951
+China,World,Arabica-led,1840.0,1190.0,1.077,0.876,13,15,0.0,307.37,6.828,3.722,3419.44,0.0,estimated or imputed,3.762,4.728,79.561,20.739
+Tanzania,Africa,Mixed,1310.0,1261.4,0.766,0.929,15,14,46.565,5.405,2.603,2.134,250.64,0.0,estimated or imputed,2.752,3.722,73.95,36.733
+Cote d'Ivoire,Africa,Robusta-led,1081.0,1030.0,0.632,0.759,17,17,100.0,4.718,-4.237,-3.338,139.82,0.0,estimated or imputed,1.752,2.567,68.27,36.024
+Kenya,Africa,Arabica-led,847.0,857.8,0.496,0.632,18,18,0.0,6.375,0.158,0.366,394.5,100.0,official,5.563,4.728,117.654,13.56
+Rwanda,Africa,Arabica-led,312.0,312.0,0.183,0.23,26,24,0.0,0.0,0.143,0.143,1019.18,60.0,partly estimated,4.632,4.728,97.97,24.863
+Madagascar,Africa,Robusta-led,305.0,50.2,0.178,0.037,27,30,91.803,83.541,-3.718,-5.901,558.66,0.0,estimated or imputed,2.081,2.744,75.849,33.633
+Cameroon,Africa,Robusta-led,238.0,169.0,0.139,0.124,28,25,87.395,29.832,-6.913,-8.437,529.96,20.0,partly estimated,1.931,2.839,68.006,19.287
+Congo (Kinshasa),Africa,Robusta-led,216.0,102.0,0.126,0.075,29,28,70.37,52.778,-2.012,0.377,394.76,0.0,estimated or imputed,2.18,3.207,67.969,12.631
+Guinea,Africa,Robusta-led,172.0,153.4,0.101,0.113,30,26,100.0,10.814,-4.875,-5.055,404.58,0.0,estimated or imputed,1.743,2.567,67.893,70.338
+Burundi,Africa,Arabica-led,147.0,132.0,0.086,0.097,31,27,0.0,10.204,-3.636,-4.492,931.56,0.0,estimated or imputed,3.567,4.728,75.431,25.078

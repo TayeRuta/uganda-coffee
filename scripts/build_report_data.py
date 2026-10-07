@@ -15,6 +15,7 @@ from coffee import (ROOT, PROC, load_world, load_fx, load_cpi, load_farmgate, lo
                     load_exports_annual, load_maize_kampala)
 
 REPORT = ROOT / 'reports' / 'coffee_report.html'
+BENCH_REPORT = ROOT / 'reports' / 'benchmark_report.html'
 
 
 def clean(o):
@@ -124,5 +125,47 @@ def main():
     print('updated', REPORT.relative_to(ROOT))
 
 
+def inject(path, data):
+    data = clean(data)
+    s = path.read_text()
+    payload = json.dumps(data, separators=(',', ':'), allow_nan=False).replace('</', '<\\/')
+    s, n = re.subn(r'(<script id="report-data" type="application/json">)(.*?)(</script>)',
+                   lambda m: m.group(1) + payload + m.group(3), s, flags=re.S)
+    if n != 1:
+        raise SystemExit(f'{path.name}: expected one report-data block, found {n}')
+    path.write_text(s)
+    print('updated', path.relative_to(ROOT))
+
+
+def benchmark():
+    """Data for reports/benchmark_report.html, from notebook 03's exported tables."""
+    b = pd.read_csv(PROC / 'benchmark_peers.csv', index_col=0)
+    names = {'Congo (Kinshasa)': 'DR Congo', "Cote d'Ivoire": "Côte d'Ivoire"}
+    peers = []
+    for c, r in b.iterrows():
+        peers.append({'country': names.get(c, c), 'set': r['set'], 'group': r['group'], 'east_africa': c in
+                      ['Uganda', 'Ethiopia', 'Kenya', 'Tanzania', 'Rwanda', 'Burundi'],
+                      'production': r4(r['Production']), 'exports': r4(r['Exports']),
+                      'prod_share': r4(r['world_production_share']), 'exp_share': r4(r['world_export_share']),
+                      'prod_rank': int(r['production_rank']), 'exp_rank': int(r['export_rank']),
+                      'robusta': r4(r['robusta_share']), 'home': r4(r['consumed_at_home']),
+                      'growth': r4(r['production growth, % a year']), 'exp_growth': r4(r['export growth, % a year']),
+                      'yield': r4(r['yield, kg/ha']), 'yield_official': r4(r['area figures official (%)']),
+                      'yield_quality': r['data quality'], 'price': r4(r.get('export price, US$/kg')),
+                      'reference': r4(r.get('mix reference, US$/kg')), 'realisation': r4(r.get('price realisation (%)')),
+                      'swing': r4(r['typical year-to-year production swing (%)'])})
+    gap = pd.read_csv(PROC / 'benchmark_uganda_source_gap.csv', index_col=0)
+    gap_rows = [{'y': int(y), 'cd': r4(r['Coffee Department (Jul–Jun)']), 'usda': r4(r['USDA (Oct–Sep)']),
+                 'fao': r4(r['FAOSTAT (calendar year)'])} for y, r in gap.iterrows()]
+    series = pd.read_csv(PROC / 'benchmark_production_series.csv', index_col=0)
+    top = ['Brazil', 'Vietnam', 'Colombia', 'Indonesia', 'Ethiopia', 'Uganda', 'India']
+    lines = {c: [{'y': int(y), 'v': r4(v)} for y, v in series[c].items() if pd.notna(v) and v > 0] for c in top}
+    w = load_world().loc['2020':'2024'].mean()
+    inject(BENCH_REPORT, {'peers': peers, 'gap': gap_rows, 'lines': lines,
+                          'ref_robusta': r4(w['robusta_usd_kg']), 'ref_arabica': r4(w['arabica_usd_kg'])})
+
+
 if __name__ == '__main__':
     main()
+    if BENCH_REPORT.exists():
+        benchmark()

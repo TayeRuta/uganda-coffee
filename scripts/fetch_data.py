@@ -12,6 +12,9 @@ Outputs
   data/raw/monthly_reports/       Coffee Department monthly report PDFs, January 2020 onwards (not committed)
   data/raw/world_coffee_prices.csv  IMF monthly prices, robusta and other mild arabica (US cents/lb), via FRED
   data/external/                  consumer price index and WFP market prices, from the uganda-food-prices project
+  data/raw/global/psd_coffee.csv            USDA coffee supply and distribution, all countries, 1960 onwards
+  data/raw/global/faostat_coffee_production.csv  FAOSTAT green coffee area, yield and production, all countries
+  data/raw/global/faostat_coffee_trade.csv       FAOSTAT green coffee export quantity and value, all countries
 
 The CPI and WFP files come from github.com/TayeRuta/uganda-food-prices. If a local copy is given with
 --food-prices-repo they are copied from it, otherwise downloaded from GitHub.
@@ -20,6 +23,7 @@ import argparse
 import io
 import re
 import shutil
+import zipfile
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -38,6 +42,9 @@ STATISTICS = [
     '2023-06/Coffee%20Exports%20from%20FY%201964-1965%20to%20FY%202021-2022.xls',
 ]
 FRED = {'robusta_usc_lb': 'PCOFFROBUSDM', 'arabica_usc_lb': 'PCOFFOTMUSDM'}
+PSD = 'https://apps.fas.usda.gov/psdonline/downloads/psd_coffee_csv.zip'
+FAO_PROD = 'https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip'
+FAO_TRADE = 'https://bulks-faostat.fao.org/production/Trade_CropsLivestock_E_All_Data.zip'
 FOOD_REPO = 'https://raw.githubusercontent.com/TayeRuta/uganda-food-prices/main/'
 FOOD_FILES = ['data/raw/fao_cpi_uganda.csv', 'data/raw/wfp_food_prices_uga.csv']
 
@@ -57,6 +64,30 @@ def report_links():
             break
         links.update(found)
     return sorted(links)
+
+
+def fetch_global():
+    """Global coffee data for the benchmark. Only green-coffee rows are kept from the large FAOSTAT files."""
+    out = RAW / 'global'
+    out.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(io.BytesIO(get(PSD))) as z:
+        name = [n for n in z.namelist() if n.endswith('.csv')][0]
+        (out / 'psd_coffee.csv').write_bytes(z.read(name))
+    print('USDA coffee database saved')
+
+    with zipfile.ZipFile(io.BytesIO(get(FAO_PROD))) as z:
+        name = [n for n in z.namelist() if n.endswith('.csv') and 'All_Data' in n][0]
+        chunks = pd.read_csv(z.open(name), encoding='utf-8', chunksize=500_000, low_memory=False)
+        prod = pd.concat(c[c['Item'] == 'Coffee, green'] for c in chunks)
+    prod.to_csv(out / 'faostat_coffee_production.csv', index=False)
+    print(f'FAOSTAT coffee production: {len(prod):,} rows')
+
+    with zipfile.ZipFile(io.BytesIO(get(FAO_TRADE))) as z:
+        name = [n for n in z.namelist() if n.endswith('All_Data.csv')][0]
+        chunks = pd.read_csv(z.open(name), encoding='utf-8', chunksize=200_000, low_memory=False)
+        trade = pd.concat(c[c['Item'] == 'Coffee, green'] for c in chunks)
+    trade.to_csv(out / 'faostat_coffee_trade.csv', index=False)
+    print(f'FAOSTAT coffee trade: {len(trade):,} rows')
 
 
 def main(food_repo):
@@ -92,6 +123,8 @@ def main(food_repo):
         else:
             dest.write_bytes(get(FOOD_REPO + f))
     print('CPI and WFP prices saved')
+
+    fetch_global()
 
 
 if __name__ == '__main__':

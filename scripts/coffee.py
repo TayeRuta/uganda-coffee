@@ -162,3 +162,28 @@ def type_climate(c, coffee_type, months):
     z = g.groupby(['year', 'zone']).agg(tmax=('tmax_c', 'mean'), tmean=('tmean_c', 'mean'),
                                          rain=('rain_chirps_mm', 'sum'), w=('area_km2', 'first')).reset_index()
     return z.groupby('year').apply(lambda x: pd.Series({k: np.average(x[k], weights=x['w']) for k in ['tmax', 'tmean', 'rain']}))
+
+
+# ---------------------------------------------------------------- global benchmark
+GLOBAL = RAW / 'global'
+FAO_NAMES = {"Cote d'Ivoire": "Côte d'Ivoire", 'Congo (Kinshasa)': 'Democratic Republic of the Congo',
+             'Tanzania': 'United Republic of Tanzania', 'Vietnam': 'Viet Nam', 'China': 'China, mainland'}
+AFRICA = ['Uganda', 'Ethiopia', 'Kenya', 'Tanzania', 'Rwanda', 'Burundi', "Cote d'Ivoire", 'Cameroon',
+          'Congo (Kinshasa)', 'Madagascar', 'Guinea', 'Togo', 'Sierra Leone', 'Angola', 'Malawi', 'Zambia',
+          'Zimbabwe', 'Central African Republic', 'Liberia', 'Ghana', 'Nigeria', 'Gabon', 'Congo (Brazzaville)',
+          'Equatorial Guinea', 'Benin']
+EAST_AFRICA = ['Uganda', 'Ethiopia', 'Kenya', 'Tanzania', 'Rwanda', 'Burundi']
+
+
+def load_psd():
+    """USDA coffee supply and distribution, wide: one row per country and market year (thousand 60-kg bags)."""
+    d = pd.read_csv(GLOBAL / 'psd_coffee.csv')
+    return d.pivot_table(index=['Country_Name', 'Market_Year'], columns='Attribute_Description', values='Value').reset_index()
+
+
+def load_fao_production():
+    return pd.read_csv(GLOBAL / 'faostat_coffee_production.csv', low_memory=False)
+
+
+def load_fao_trade():
+    return pd.read_csv(GLOBAL / 'faostat_coffee_trade.csv', low_memory=False)

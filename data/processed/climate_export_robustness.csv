@@ -1,0 +1,5 @@
+check,climate,effect per SD (%),p,permutation p
+"year-to-year changes, 1992–2025",Jan–Jun heat,-8.7683,0.0636,0.0375
+"year-to-year changes, 1992–2025","Jul–Dec rain, year before",7.2676,0.0025,0.022
+"levels with trend, 1991–2014 only",Jan–Jun heat,-16.3917,0.0101,
+"levels with trend, 1991–2014 only","Jul–Dec rain, year before",11.8852,0.0075,

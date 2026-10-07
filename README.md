@@ -11,6 +11,7 @@ Six decades of Uganda's coffee exports, and how world coffee prices pass through
 - **Farmers' share of the world robusta price rose from about 45% after market liberalisation (1992–93) to 70–80% today.**
 - **Prices pass through fast.** About two-thirds of a world price change reaches robusta farmers within the month, and the remaining gap halves in two to three months. Arabica follows more slowly.
 - **The 2024–25 farm-gate boom was the world price.** About 96% of the 3.4× rise in robusta farm-gate prices from 2020 to 2025 came from world prices. Prices peaked in February 2025 and are down about a quarter since.
+- **The robusta belt is warming fast, and heat costs exports.** Daytime highs in the robusta zones are rising 0.43–0.67 °C per decade (reanalysis; needs a station check). Heat in January–June cuts robusta exports by about 9–16% per standard deviation, and a wet July–December lifts the next crop by about 7–12%. Arabica shows no consistent signal. *Medium confidence.*
 - **Coffee income arrives June–September (robusta) and February–May (arabica).** Coffee prices are calmer than maize month to month, but their worst 12-month falls are deeper (−52% to −64% in real terms).
 
 ## Repository structure
@@ -25,10 +26,12 @@ Six decades of Uganda's coffee exports, and how world coffee prices pass through
 │   ├── external/                    # consumer prices and WFP prices, from the uganda-food-prices project
 │   └── processed/                   # figures extracted from the reports, and result tables
 ├── notebooks/
-│   └── 01_exports_prices_and_farmgate.ipynb
+│   ├── 01_exports_prices_and_farmgate.ipynb
+│   └── 02_climate_and_exports.ipynb
 ├── reports/
 │   └── coffee_report.html           # the write-up, published on GitHub Pages
 ├── scripts/
+│   ├── gee/uganda_coffee_zones_climate_gee.js   # Earth Engine export: coffee-zone temperature and rainfall
 │   ├── fetch_data.py                # downloads every input
 │   ├── extract_monthly_reports.py   # reads exports and farm-gate prices from the report PDFs
 │   ├── coffee.py                    # shared loading code
@@ -63,6 +66,7 @@ python scripts/build_report_data.py          # refresh the numbers in the report
 | [Coffee statistics and monthly reports](https://ugandacoffee.go.ug/index.php/resource-center/statistics) | Coffee Department, Ministry of Agriculture, Animal Industry and Fisheries (formerly Uganda Coffee Development Authority) |
 | [Global prices of robusta and other mild arabica](https://fred.stlouisfed.org/series/PCOFFROBUSDM) | IMF, via FRED |
 | [Consumer price index](https://www.fao.org/faostat/en/#data/CP) | FAOSTAT |
+| [ERA5-Land monthly](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_MONTHLY_AGGR) and [CHIRPS](https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY) | Coffee-zone temperature and rainfall | ECMWF/Copernicus; UC Santa Barbara CHC, via Google Earth Engine |
 | [Market prices](https://data.humdata.org/dataset/wfp-food-prices-for-uganda) | World Food Programme, via HDX |
 
 ## Limitations

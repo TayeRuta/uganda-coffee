@@ -17,6 +17,17 @@ from coffee import (ROOT, PROC, load_world, load_fx, load_cpi, load_farmgate, lo
 REPORT = ROOT / 'reports' / 'coffee_report.html'
 
 
+def clean(o):
+    """Replace NaN with None everywhere: browsers reject NaN in JSON."""
+    if isinstance(o, dict):
+        return {k: clean(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [clean(v) for v in o]
+    if isinstance(o, float) and np.isnan(o):
+        return None
+    return o
+
+
 def r4(v):
     return None if v is None or (isinstance(v, float) and np.isnan(v)) else round(float(v), 4)
 
@@ -69,22 +80,42 @@ def main():
                      'year': r4(100 * x.loc['2020-01':'2026-03'].diff(12).std()),
                      'worst': r4(100 * (np.exp(worst.min()) - 1)), 'worst_d': str(worst.idxmin())})
 
+    # Climate (notebook 02)
+    za = pd.read_csv(PROC / 'zone_climate_annual.csv')
+    clim_lines = {}
+    for z, g in za.groupby('zone'):
+        base = g[g['year'].between(1991, 2020)]['tmax'].mean()
+        clim_lines[z] = [{'y': int(r['year']), 'v': r4(r['tmax'] - base)} for _, r in g.iterrows()]
+    tr = pd.read_csv(PROC / 'zone_climate_trends.csv', index_col=0)
+    hotm = pd.read_csv(PROC / 'hot_months_by_decade.csv', index_col=0)
+    zones_tbl = [{'zone': z, 'tmax_dec': r4(tr.loc[z, 'tmax per decade']), 'tmax_p': r4(tr.loc[z, 'tmax p']),
+                  'rain_dec': r4(tr.loc[z, 'rain per decade']), 'rain_p': r4(tr.loc[z, 'rain p']),
+                  'max_90s': r4(tr.loc[z, 'daily max, 1990s']), 'max_recent': r4(tr.loc[z, 'daily max, 2016–25']),
+                  'hot_90s': r4(hotm.loc[z, '1990s']), 'hot_20s': r4(hotm.loc[z, '2020s'])} for z in tr.index]
+    rb = pd.read_csv(PROC / 'climate_export_robustness.csv').round(4).to_dict('records')
+    grid = pd.read_csv(PROC / 'climate_export_grid.csv')
+    main = grid[(grid['type'] == 'robusta') & (grid['climate months'].isin(['Jan–Jun', 'Jul–Dec']))]
+    climate = {'lines': clim_lines, 'zones': zones_tbl, 'robust': rb,
+               'heat_levels': r4(main[(main['climate months'] == 'Jan–Jun') & (main['climate year'] == 'same year')]['hotter +1 SD (%)'].iloc[0]),
+               'rain_levels': r4(main[(main['climate months'] == 'Jul–Dec') & (main['climate year'] == 'year before')]['wetter +1 SD (%)'].iloc[0])}
+
     last_fy = annual.index[-1]
     data = {
         'annual': ann, 'exports_vs_world': exp,
         'ratio_by_year': {int(y): {'rob': r4(v['r']), 'ara': r4(v['a'])} for y, v in ratio.groupby(ratio.index.year)[['r', 'a']].mean().iterrows()},
         'share_monthly': share_m, 'share_yearly': share_y,
         'boom': boom, 'decomp': decomp, 'peaks': peaks,
-        'passthrough': pt, 'calendar': cal, 'risk': risk,
+        'passthrough': pt, 'calendar': cal, 'risk': risk, 'climate': climate,
         'kpi': {'last_fy': last_fy, 'last_bags': r4(annual.loc[last_fy, 'total_bags']),
                 'record_usd_m': r4(annual['total_usd_m'].max()), 'record_usd_fy': annual['total_usd_m'].idxmax(),
                 'bags_2015_16': r4(annual.loc['2015/16', 'total_bags']),
                 'corrections': int(pd.read_csv(PROC / 'monthly_reports_extracted.csv')['notes'].notna().sum()),
                 'reports': int(len(pd.read_csv(PROC / 'monthly_reports_extracted.csv')))},
     }
-    (PROC / 'report_data.json').write_text(json.dumps(data, indent=1))
+    data = clean(data)
+    (PROC / 'report_data.json').write_text(json.dumps(data, indent=1, allow_nan=False))
     s = REPORT.read_text()
-    payload = json.dumps(data, separators=(',', ':')).replace('</', '<\\/')
+    payload = json.dumps(data, separators=(',', ':'), allow_nan=False).replace('</', '<\\/')
     s, n = re.subn(r'(<script id="report-data" type="application/json">)(.*?)(</script>)',
                    lambda m: m.group(1) + payload + m.group(3), s, flags=re.S)
     if n != 1:

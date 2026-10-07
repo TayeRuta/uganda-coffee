@@ -145,3 +145,20 @@ def load_maize_kampala():
     w = w[(w['market'] == 'Owino') & (w['commodity'] == 'Maize (white)') & (w['pricetype'] == 'Retail')]
     w['price'] = pd.to_numeric(w['price'], errors='coerce')
     return w.groupby(_period(w['date']))['price'].mean().rename('maize_ugx')
+
+
+# ---------------------------------------------------------------- coffee-zone climate
+def load_zone_climate(last_year=2025):
+    """Monthly temperature (ERA5-Land) and rainfall (CHIRPS) for six coffee zones, from
+    scripts/gee/uganda_coffee_zones_climate_gee.js. Complete calendar years only."""
+    c = pd.read_csv(RAW / 'uganda_coffee_zones_climate.csv')
+    return c[c['year'] <= last_year]
+
+
+def type_climate(c, coffee_type, months):
+    """Area-weighted climate of all zones of one coffee type, by calendar year, over the given months:
+    mean daily maximum and mean temperature (deg C) and total rainfall (mm)."""
+    g = c[(c['type'] == coffee_type) & (c['month'].isin(months))]
+    z = g.groupby(['year', 'zone']).agg(tmax=('tmax_c', 'mean'), tmean=('tmean_c', 'mean'),
+                                         rain=('rain_chirps_mm', 'sum'), w=('area_km2', 'first')).reset_index()
+    return z.groupby('year').apply(lambda x: pd.Series({k: np.average(x[k], weights=x['w']) for k in ['tmax', 'tmean', 'rain']}))

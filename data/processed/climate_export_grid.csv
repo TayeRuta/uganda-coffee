@@ -1,0 +1,13 @@
+type,climate months,climate year,wetter +1 SD (%),p rain,hotter +1 SD (%),p heat,years
+robusta,Jan–Jun,same year,2.0526,0.6507,-21.4693,0.0003,35
+robusta,Jan–Jun,year before,-1.1512,0.8059,-13.0748,0.0381,35
+robusta,Jul–Dec,same year,9.4015,0.0808,7.6105,0.4676,35
+robusta,Jul–Dec,year before,13.8819,0.0037,1.3695,0.893,35
+robusta,calendar year,same year,3.1511,0.5118,-18.1098,0.045,35
+robusta,calendar year,year before,7.5953,0.1614,-11.4975,0.1465,35
+arabica,Jan–Jun,same year,1.9395,0.4678,6.2435,0.1274,35
+arabica,Jan–Jun,year before,-1.5916,0.6994,4.6646,0.3713,35
+arabica,Jul–Dec,same year,3.5824,0.4198,6.5474,0.2924,35
+arabica,Jul–Dec,year before,-4.5681,0.494,0.4229,0.9468,35
+arabica,calendar year,same year,2.802,0.3588,8.802,0.045,35
+arabica,calendar year,year before,-3.9602,0.4874,4.7464,0.3888,35

@@ -301,7 +301,196 @@ print('Saved 6 tables to data/processed/')
 """),
 ]
 
+NB2 = [
+('md', r"""
+# Coffee and climate: warming zones and what heat and rain do to exports
+**Climate:** monthly ERA5-Land temperature (mean, daily maximum, daily minimum; about 11 km) and CHIRPS rainfall (about 5.5 km) for six coffee zones, January 1990 – December 2025, exported with `scripts/gee/uganda_coffee_zones_climate_gee.js`
+**Exports:** robusta and arabica export volumes by financial year (notebook 01), FY1991/92–2025/26
+
+| Zone | Type | Land included |
+|---|---|---|
+| Mt Elgon | Arabica | Elgon coffee districts, 1,300 m or higher |
+| Rwenzori | Arabica | Rwenzori coffee districts, 1,300 m or higher |
+| Greater Masaka, Central, South-west, Busoga | Robusta | each group's coffee districts, below 1,500 m |
+
+**Questions**
+1. Are Uganda's coffee zones warming, and how often are months now unusually hot?
+2. Has rainfall changed?
+3. Does a year's heat or rainfall show up in the following exports?
+
+**Timing.** Exports for financial year *y*/*y*+1 (July–June) come mostly from the crop that flowered and filled during calendar year *y*. Climate in year *y*, and in the second half of year *y*−1 (when the next season's flower buds form), is therefore matched to exports in FY *y*/*y*+1.
+
+Each finding is written up in a markdown cell directly after the code and output that produced it.
+"""),
+('md', '## Setup and data checks'),
+('code', STYLE + r"""
+from scipy import stats
+from coffee import load_zone_climate, type_climate
+rng = np.random.default_rng(42)
+c = load_zone_climate()
+zones = c.groupby('zone').agg(type=('type', 'first'), area_km2=('area_km2', 'first'), months=('date', 'size'),
+                              mean_temp_c=('tmean_c', 'mean'), mean_daily_max_c=('tmax_c', 'mean'),
+                              annual_rain_mm=('rain_chirps_mm', lambda x: x.sum() / c['year'].nunique()))
+print(c['date'].min(), '–', c['date'].max(), '| missing values:', int(c.isna().sum().sum()))
+zones.round(1)
+"""),
+('md', r"""
+**Check:** all six zones have all 432 months from 1990 to 2025, with no gaps. The arabica zones average about 17–18 °C and the robusta zones 21–22 °C, which matches where each type grows best. Annual rainfall ranges from about 1,000 mm (South-west) to about 1,640 mm (Mt Elgon).
+"""),
+
+('md', '---\n## 1. Warming'),
+('code', r"""
+annual = c.groupby(['zone', 'year']).agg(tmean=('tmean_c', 'mean'), tmax=('tmax_c', 'mean'), tmin=('tmin_c', 'mean'),
+                                          rain=('rain_chirps_mm', 'sum'))
+rows = []
+for z, g in annual.groupby(level=0):
+    g = g.droplevel(0)
+    r = {'zone': z}
+    for v in ['tmean', 'tmax', 'tmin', 'rain']:
+        m = sm.OLS(g[v].values, sm.add_constant(np.array(g.index, float))).fit(cov_type='HAC', cov_kwds={'maxlags': 2})
+        r[f'{v} per decade'] = 10 * m.params[1]
+        r[f'{v} p'] = m.pvalues[1]
+    r['daily max, 1990s'] = g.loc[1990:1999, 'tmax'].mean()
+    r['daily max, 2016–25'] = g.loc[2016:2025, 'tmax'].mean()
+    rows.append(r)
+trends = pd.DataFrame(rows).set_index('zone')
+trends.round(3)
+"""),
+('code', r"""
+fig, ax = plt.subplots(1, 2, figsize=(12, 3.8), sharey=False)
+for z, g in annual.groupby(level=0):
+    g = g.droplevel(0)
+    col = ARA if 'Arabica' in z else ROB
+    a = ax[0] if 'Robusta' in z else ax[1]
+    a.plot(g.index, g['tmax'] - g.loc[1991:2020, 'tmax'].mean(), color=col, lw=1.6, alpha=.85, label=z.split(', ')[1])
+for a, t in zip(ax, ['Robusta zones', 'Arabica zones']):
+    a.axhline(0, color=GREY, lw=1); a.set_title(t); a.legend(fontsize=8.5, ncol=2)
+ax[0].set_ylabel('Daily maximum vs 1991–2020 (°C)')
+plt.tight_layout(); plt.show()
+"""),
+('md', r"""
+**Finding:** every coffee zone has warmed significantly since 1990. The robusta zones are warming fastest: average temperature by 0.3–0.44 °C per decade and **daytime highs by 0.43–0.67 °C per decade**. Central and Greater Masaka were 1.6–1.7 °C hotter in the daytime in 2016–25 than in the 1990s. The arabica zones on Mt Elgon and the Rwenzoris are warming more slowly, by about 0.2 °C per decade.
+
+**Caution:** these trends come from ERA5-Land, a reanalysis that blends weather models with observations. Reanalysis trends in data-sparse regions can be exaggerated by changes in the observations it draws on, and clearing of trees and wetlands raises local daytime highs. The direction is consistent with other evidence of warming in East Africa, but the size of the robusta-zone trend should be checked against weather-station records before it is used for planning.
+"""),
+('code', r"""
+c['p90'] = c.groupby(['zone', 'month'])['tmax_c'].transform(
+    lambda s: s[c.loc[s.index, 'year'].between(1991, 2020)].quantile(0.9))
+c['hot'] = c['tmax_c'] > c['p90']
+c['decade'] = (c['year'] // 10 * 10).astype(str) + 's'
+hot = 100 * c.groupby(['zone', 'decade'])['hot'].mean().unstack()
+hot.round(0)
+"""),
+('md', r"""
+**Finding:** a "hot month" here is one whose daytime highs exceed the hottest tenth of that calendar month in 1991–2020, so about 10% of months would be hot if nothing were changing. In the 1990s almost none were. In the 2020s so far, **44–46% of months in Central and Greater Masaka** have been hot, and about a quarter in Busoga and the South-west. The arabica zones have changed less (6–21%).
+"""),
+
+('md', '---\n## 2. Rainfall'),
+('code', r"""
+trends[['rain per decade', 'rain p']].round(3)
+"""),
+('md', r"""
+**Finding:** rainfall has not fallen in any coffee zone. It has risen significantly on **Mt Elgon (about +108 mm per decade)** and in **Busoga (about +78 mm per decade)**, consistent with the wetting of the east found in the rainfall project. Elsewhere the changes are small and not significant. In the coffee belt, the climate change that is clearly under way is heat, not drought.
+"""),
+
+('md', '---\n## 3. Do heat and rain show up in exports?'),
+('code', r"""
+ann = load_exports_annual().dropna(subset=['robusta_bags'])
+ann.index = [int(i[:4]) for i in ann.index]
+rows = []
+for t, col in [('robusta', 'robusta_bags'), ('arabica', 'arabica_bags')]:
+    y = np.log(ann[col])
+    for window, months in [('Jan–Jun', range(1, 7)), ('Jul–Dec', range(7, 13)), ('calendar year', range(1, 13))]:
+        clim = type_climate(c, t, months)
+        for lag in [0, 1]:
+            d = pd.DataFrame({'y': y}).join(clim.rename(index=lambda i: i + lag)).dropna()
+            X = pd.DataFrame({'rain': (d['rain'] - d['rain'].mean()) / d['rain'].std(),
+                              'heat': (d['tmax'] - d['tmax'].mean()) / d['tmax'].std(),
+                              'trend': d.index - d.index.min()}, index=d.index)
+            m = sm.OLS(d['y'], sm.add_constant(X)).fit(cov_type='HAC', cov_kwds={'maxlags': 2})
+            rows.append({'type': t, 'climate months': window, 'climate year': 'same year' if lag == 0 else 'year before',
+                         'wetter +1 SD (%)': 100 * (np.exp(m.params['rain']) - 1), 'p rain': m.pvalues['rain'],
+                         'hotter +1 SD (%)': 100 * (np.exp(m.params['heat']) - 1), 'p heat': m.pvalues['heat'], 'years': int(m.nobs)})
+grid = pd.DataFrame(rows)
+grid.round(3)
+"""),
+('md', r"""
+**Reading the table:** each row relates export volume (logged, with a linear trend) to rainfall and daytime heat in the coffee zones over the given months, either in the same calendar year as the crop or the year before. Effects are per standard deviation of that climate variable. Twelve combinations were tried per coffee type, so single p-values near 0.05 should not be over-read.
+
+**Finding:** two signals stand out for **robusta**, and no consistent one for arabica:
+- **Heat in January–June of the crop year lowers robusta exports**, by about 20% per standard deviation (p < 0.001). This is when robusta flowers after the dry season and sets fruit; heat stress then is known to cause flower and berry drop.
+- **A wetter July–December in the year before raises robusta exports**, by about 14% per standard deviation (p = 0.004), when the flower buds for the next crop form.
+
+**Arabica** shows no consistent signal. One of its twelve combinations reaches p < 0.05 (calendar-year heat, +9%, in the opposite direction to robusta), which is about what chance alone would produce across twelve tries. Arabica exports depend heavily on processing, stocks and quality, and the arabica zones have warmed less.
+"""),
+('code', r"""
+y = np.log(ann['robusta_bags'])
+heat = type_climate(c, 'robusta', range(1, 7))['tmax']
+wet_before = type_climate(c, 'robusta', range(7, 13))['rain'].rename(index=lambda i: i + 1)
+d = pd.DataFrame({'y': y, 'heat': heat, 'rain': wet_before}).dropna()
+
+# 1) Year-to-year changes: removes any trend, linear or not
+dd = d.diff().dropna()
+dd['heat_sd'] = dd['heat'] / d['heat'].std()
+dd['rain_sd'] = dd['rain'] / d['rain'].std()
+m = sm.OLS(dd['y'], sm.add_constant(dd[['heat_sd', 'rain_sd']])).fit(cov_type='HAC', cov_kwds={'maxlags': 2})
+rows = []
+for v in ['heat_sd', 'rain_sd']:
+    null = [sm.OLS(dd['y'], sm.add_constant(dd[['heat_sd', 'rain_sd']].assign(**{v: rng.permutation(dd[v].values)}))).fit().params[v]
+            for _ in range(2000)]
+    rows.append({'check': 'year-to-year changes, 1992–2025', 'climate': 'Jan–Jun heat' if v == 'heat_sd' else 'Jul–Dec rain, year before',
+                 'effect per SD (%)': 100 * (np.exp(m.params[v]) - 1), 'p': m.pvalues[v],
+                 'permutation p': (np.sum(np.abs(null) >= abs(m.params[v])) + 1) / 2001})
+
+# 2) Before the export boom: 1991–2014 only
+q = d.loc[:2014]
+X = pd.DataFrame({'heat_sd': (q['heat'] - q['heat'].mean()) / q['heat'].std(),
+                  'rain_sd': (q['rain'] - q['rain'].mean()) / q['rain'].std(), 'trend': q.index - q.index.min()}, index=q.index)
+m2 = sm.OLS(q['y'], sm.add_constant(X)).fit()
+for v, lab in [('heat_sd', 'Jan–Jun heat'), ('rain_sd', 'Jul–Dec rain, year before')]:
+    rows.append({'check': 'levels with trend, 1991–2014 only', 'climate': lab,
+                 'effect per SD (%)': 100 * (np.exp(m2.params[v]) - 1), 'p': m2.pvalues[v], 'permutation p': np.nan})
+robust = pd.DataFrame(rows)
+robust.round(3)
+"""),
+('md', r"""
+**Finding:** both robusta effects survive the stricter checks.
+- Comparing **year-to-year changes** removes any trend, straight or curved, so the effects can't come from heat and exports both rising over time. Heat still lowers exports (about 9% per standard deviation, permutation p ≈ 0.04), and the previous year's rain still raises them (about 7%, permutation p ≈ 0.02).
+- Using only **1991–2014**, before the export boom, gives similar or larger effects (heat about −16%, rain about +12%, both p ≈ 0.01).
+
+**Confidence: medium.** The effects are consistent across checks and biologically plausible, but they rest on 34 years of national exports, which also reflect stocks and trade timing, and several windows were tried.
+
+**What it means:** the robusta belt is warming fastest exactly in the months when heat hurts the crop. Uganda's rising exports have come from new planting and strong prices, which so far have outweighed the climate drag. Heat-tolerant varieties, shade trees and mulching in the Central and Masaka robusta zones are the adaptation priorities this points to.
+"""),
+
+('md', '---\n## Export'),
+('code', r"""
+from pathlib import Path
+out = Path('../data/processed')
+trends.round(4).to_csv(out / 'zone_climate_trends.csv')
+hot.round(2).to_csv(out / 'hot_months_by_decade.csv')
+grid.round(4).to_csv(out / 'climate_export_grid.csv', index=False)
+robust.round(4).to_csv(out / 'climate_export_robustness.csv', index=False)
+annual.round(3).to_csv(out / 'zone_climate_annual.csv')
+print('Saved 5 tables to data/processed/')
+"""),
+('md', r"""
+---
+## Summary
+
+- **All coffee zones are warming.** The robusta zones fastest: daytime highs up about 0.4–0.7 °C per decade; Central and Greater Masaka were 1.6–1.7 °C hotter in 2016–25 than in the 1990s. In the 2020s close to half of all months there have been unusually hot.
+- **Rainfall has not fallen;** it has risen on Mt Elgon and in Busoga. Heat, not drought, is the trend.
+- **Heat in January–June cuts robusta exports** (about 9–20% per standard deviation, depending on the check), and **a wet second half of the year lifts the next year's robusta crop** (about 7–14%). *Medium confidence.*
+- **Arabica shows no consistent climate signal** in national exports.
+
+**Caveats:** reanalysis temperature trends need checking against stations; national exports are a noisy measure of the harvest; twelve season windows were tried per coffee type.
+
+**Next:** deforestation screening of coffee areas for the EU regulation, and a station-data check of the warming trend.
+"""),
+]
+
 if __name__ == '__main__':
     out = ROOT / 'notebooks'
     out.mkdir(exist_ok=True)
     notebook(NB1, out / '01_exports_prices_and_farmgate.ipynb')
+    notebook(NB2, out / '02_climate_and_exports.ipynb')

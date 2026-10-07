@@ -1,0 +1,17 @@
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Monthly report PDFs (about 126 MB): re-download with scripts/fetch_data.py
+data/raw/monthly_reports/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
